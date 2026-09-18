@@ -969,6 +969,9 @@ const REGIONS = [
   {id:"it-milan", country:"Italy", city:"Milan", currency:"EUR", symbol:"€", fx:1, mMain:1.05, mDiscount:0.98, stores:{premium:"Esselunga", standard:"Conad", discount1:"Lidl", discount2:"Aldi"}},
   {id:"at-vienna", country:"Austria", city:"Vienna", currency:"EUR", symbol:"€", fx:1, mMain:1.05, mDiscount:1.00, stores:{premium:"Billa", standard:"Spar", discount1:"Lidl", discount2:"Hofer"}},
   {id:"uk-london", country:"United Kingdom", city:"London", currency:"GBP", symbol:"£", fx:0.85, mMain:1.18, mDiscount:1.05, stores:{premium:"Waitrose", standard:"Tesco", discount1:"Lidl", discount2:"Aldi"}},
+  {id:"nl-tilburg", country:"Netherlands", city:"Tilburg", currency:"EUR", symbol:"€", fx:1, mMain:1.00, mDiscount:1.00, stores:{premium:"Albert Heijn", standard:"Jumbo", discount1:"Lidl", discount2:"Aldi"}},
+  {id:"lt-vilnius", country:"Lithuania", city:"Vilnius", currency:"EUR", symbol:"€", fx:1, mMain:1.00, mDiscount:1.00, stores:{premium:"Rimi", standard:"Maxima", discount1:"Lidl", discount2:"Norfa"}},
+  
 ];
 const REGION_BY_ID = Object.fromEntries(REGIONS.map(r=>[r.id,r]));
 const COUNTRIES = [...new Set(REGIONS.map(r=>r.country))];
