@@ -1,0 +1,2229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#282B4A">
+
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="MealPrep">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market & Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* ===== COLORS ===== */
+
+    /* Main background */
+    --bg: #282B4A;
+
+    /* Cards */
+    --surface: #D8D3C3;
+    --surface-2: #C9C3B2;
+
+    /* Text */
+    --ink: #1F1F1F;
+    --ink-soft: #555555;
+
+    /* Borders */
+    --line: #BDB7A8;
+
+    /* Buttons */
+    --primary: #D8D3C3;
+    --primary-ink: #282B4A;
+
+    /* Accent */
+    --accent: #D9A441;
+    --accent-ink: #20140A;
+
+    /* Status colors */
+    --good: #3F7D58;
+    --good-bg: #E7F1EA;
+
+    --bad: #A6432B;
+    --bad-bg: #F5E7E1;
+
+    --warn: #B4791A;
+    --warn-bg: #F6ECD8;
+
+    /* Shadow */
+    --shadow:
+      0 1px 2px rgba(40,43,74,0.06),
+      0 6px 20px rgba(40,43,74,0.06);
+
+    --radius: 14px;
+
+    /* Fonts */
+    --font-display: 'Fraunces', serif;
+    --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+
+    /* Recipe icon colors */
+    --tint-bowl: #E7E0C9;
+    --tint-soup: #F0D3C2;
+    --tint-pan: #E3D3EA;
+    --tint-oven: #E9C7A8;
+    --tint-sandwich: #D8E8D6;
+    --tint-pancake: #F5E3AE;
+    --tint-egg: #FCEFC2;
+    --tint-smoothie: #D3E5EC;
+    --tint-pasta: #F2D6D0;
+    --tint-toast: #F0D9DE;
+    --tint-snackbox: #D6EAE2;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: #282B4A;
+    color: #F5F3EA;
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  .display {
+    font-family: var(--font-display);
+  }
+
+  button {
+    font-family: var(--font-body);
+  }
+
+  a {
+    color: inherit;
+  }
+
+  .app {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ===== NAVIGATION ===== */
+
+  .nav {
+    width: 230px;
+    flex-shrink: 0;
+    background: var(--surface);
+    color: var(--ink);
+    border-right: 1px solid var(--line);
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 10px 20px;
+  }
+
+  .brand svg {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+  }
+
+  .brand .txt {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 1.32rem;
+    color: var(--primary-ink);
+    line-height: 1.1;
+  }
+
+  .brand .txt span {
+    display: block;
+    font-family: var(--font-body);
+    font-style: normal;
+    font-weight: 500;
+    font-size: 0.65rem;
+    letter-spacing: .03em;
+    color: var(--ink-soft);
+    margin-top: 3px;
+  }
+
+  .navbtn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border: none;
+    background: transparent;
+    border-radius: 10px;
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    cursor: pointer;
+    text-align: left;
+    font-weight: 500;
+  }
+
+  .navbtn:hover {
+    background: var(--surface-2);
+    color: var(--ink);
+  }
+
+  .navbtn.active {
+    background: var(--primary);
+    color: var(--primary-ink);
+  }
+
+  .navbtn .ic {
+    width: 20px;
+    text-align: center;
+    font-size: 1.05rem;
+  }
+
+  .navfoot {
+    margin-top: auto;
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    padding: 10px;
+    line-height: 1.5;
+  }
+
+  /* ===== MAIN ===== */
+
+  .main {
+    flex: 1;
+    min-width: 0;
+    padding: 32px 40px 100px;
+    max-width: 1120px;
+  }
+
+  .tabhead {
+    margin-bottom: 20px;
+  }
+
+  .tabhead h1 {
+    font-size: 1.7rem;
+    margin: 0 0 6px;
+    font-weight: 600;
+    color: #F5F3EA;
+  }
+
+  .tabhead p {
+    margin: 0;
+    color: #E5E3DA;
+    font-size: 0.93rem;
+    max-width: 64ch;
+  }
+
+  /* ===== CARDS ===== */
+
+  .stat-row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+
+  .stat {
+    background: var(--surface);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    min-width: 140px;
+    box-shadow: var(--shadow);
+  }
+
+  .stat .num {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  .stat .lab {
+    font-size: 0.74rem;
+    color: var(--ink-soft);
+    margin-top: 4px;
+  }
+
+  .card {
+    background: var(--surface);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 16px;
+  }
+
+  /* ===== RECIPE CARDS ===== */
+
+  .recipe-card {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .recipe-card .body {
+    padding: 14px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .recipe-card h3 {
+    margin: 0;
+    font-size: 1.02rem;
+    font-weight: 600;
+  }
+
+  .mealicon {
+    height: 88px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mealicon svg {
+    width: 56px;
+    height: 56px;
+  }
+
+  .mealicon.bowl {
+    background: var(--tint-bowl);
+  }
+
+  .mealicon.soup {
+    background: var(--tint-soup);
+  }
+
+  .mealicon.pan {
+    background: var(--tint-pan);
+  }
+
+  .mealicon.oven {
+    background: var(--tint-oven);
+  }
+
+  .mealicon.sandwich {
+    background: var(--tint-sandwich);
+  }
+
+  .mealicon.pancake {
+    background: var(--tint-pancake);
+  }
+
+  .mealicon.egg {
+    background: var(--tint-egg);
+  }
+
+  .mealicon.smoothie {
+    background: var(--tint-smoothie);
+  }
+
+  .mealicon.pasta {
+    background: var(--tint-pasta);
+  }
+
+  .mealicon.toast {
+    background: var(--tint-toast);
+  }
+
+  .mealicon.snackbox {
+    background: var(--tint-snackbox);
+  }
+
+  /* ===== TAGS ===== */
+
+  .tagrow {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    font-size: 0.68rem;
+    padding: 2px 8px;
+    border-radius: 100px;
+    background: var(--surface-2);
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+  }
+
+  .tag.cook-none {
+    background: var(--good-bg);
+    color: var(--good);
+    border-color: transparent;
+  }
+
+  .tag.cook-stovetop {
+    background: var(--warn-bg);
+    color: var(--warn);
+    border-color: transparent;
+  }
+
+  .tag.cook-oven {
+    background: var(--bad-bg);
+    color: var(--bad);
+    border-color: transparent;
+  }
+
+  .macros {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .ingr-list {
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+    margin: 2px 0 0;
+  }
+
+  .row-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .servings-input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .servings-input input {
+    width: 64px;
+    text-align: center;
+  }
+
+  .missbadge {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border-radius: 100px;
+    font-weight: 600;
+  }
+
+  .missbadge.ok {
+    background: var(--good-bg);
+    color: var(--good);
+  }
+
+  .missbadge.some {
+    background: var(--surface-2);
+    color: var(--ink-soft);
+  }
+
+  /* ===== BUTTONS ===== */
+
+  .segmented {
+    display: inline-flex;
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    padding: 3px;
+    background: var(--surface-2);
+    gap: 2px;
+  }
+
+  .segmented button {
+    border: none;
+    background: transparent;
+    padding: 7px 14px;
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--ink-soft);
+  }
+
+  .segmented button.active {
+    background: var(--primary);
+    color: var(--primary-ink);
+  }
+
+  .btn {
+    border: none;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+  }
+
+  .btn.primary {
+    background: var(--primary);
+    color: var(--primary-ink);
+  }
+
+  .btn.ghost {
+    background: var(--surface-2);
+    color: var(--ink);
+  }
+
+  .btn.accent {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  .btn.small {
+    padding: 6px 12px;
+    font-size: 0.78rem;
+    border-radius: 8px;
+  }
+
+  .linkbtn {
+    background: none;
+    border: none;
+    color: var(--primary);
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 0.82rem;
+    padding: 0;
+    font-weight: 600;
+  }
+
+  /* ===== TABLE ===== */
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.86rem;
+  }
+
+  th,
+  td {
+    text-align: left;
+    padding: 9px 10px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  th {
+    font-size: 0.72rem;
+    text-transform: none;
+    color: var(--ink-soft);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  td.num,
+  th.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cheapest {
+    color: var(--good);
+    font-weight: 700;
+  }
+
+  .storepill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 10px;
+    border-radius: 100px;
+    background: var(--good-bg);
+    color: var(--good);
+    font-weight: 700;
+    font-size: 0.78rem;
+  }
+
+  .unavail {
+    color: var(--ink-soft);
+    opacity: 0.5;
+  }
+
+  /* ===== STORE CARDS ===== */
+
+  .store-tot {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 18px 0;
+  }
+
+  .store-card {
+    flex: 1;
+    min-width: 150px;
+    padding: 16px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+  }
+
+  .store-card.winner {
+    border-color: var(--good);
+    background: var(--good-bg);
+  }
+
+  .store-card h4 {
+    margin: 0 0 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .store-card .p {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+
+  .store-card .s {
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+  }
+
+  /* ===== EMPTY ===== */
+
+  .empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--ink-soft);
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+  }
+
+  .empty .big {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+  }
+
+  /* ===== CALORIES ===== */
+
+  .cal-ring-wrap {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .ring {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    flex-shrink: 0;
+  }
+
+  .ring svg {
+    transform: rotate(-90deg);
+    width: 100%;
+    height: 100%;
+  }
+
+  .ring .center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ring .center b {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+  }
+
+  .ring .center span {
+    font-size: 0.7rem;
+    color: var(--ink-soft);
+  }
+
+  .loglist {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .logitem {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.88rem;
+  }
+
+  .logitem button {
+    border: none;
+    background: none;
+    color: var(--bad);
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0 4px;
+  }
+
+  .quickadd {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .chip {
+    border: 1px solid var(--line);
+    background: var(--surface-2);
+    border-radius: 100px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    font-weight: 500;
+  }
+
+  .chip:hover {
+    border-color: var(--primary);
+  }
+
+  /* ===== CALORIE BARS ===== */
+
+  .bar-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 90px;
+    margin-top: 6px;
+  }
+
+  .bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    justify-content: flex-end;
+    height: 100%;
+  }
+
+  .bar {
+    width: 100%;
+    max-width: 26px;
+    background: var(--surface-2);
+    border-radius: 5px 5px 0 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bar i {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--primary);
+  }
+
+  .bar-col small {
+    font-size: 0.65rem;
+    color: var(--ink-soft);
+  }
+
+  /* ===== INPUTS ===== */
+
+  input[type="number"],
+  input[type="text"],
+  select {
+    font-family: var(--font-body);
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+    border-radius: 8px;
+    padding: 7px 9px;
+    font-size: 0.85rem;
+    width: 100%;
+  }
+
+  input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+  }
+
+  label.field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    font-weight: 500;
+  }
+
+  /* ===== SETTINGS ===== */
+
+  .settings-grid {
+    display: grid;
+    grid-template-columns: 1.6fr repeat(4, 0.9fr);
+    gap: 6px 10px;
+    align-items: center;
+    font-size: 0.82rem;
+  }
+
+  .settings-grid .h {
+    font-weight: 600;
+    color: var(--ink-soft);
+    font-size: 0.7rem;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .settings-grid input {
+    padding: 5px 7px;
+    font-size: 0.8rem;
+  }
+
+  .section-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 26px 0 10px;
+  }
+
+  .pantry-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 6px 14px;
+  }
+
+  .pantry-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.83rem;
+    padding: 4px 0;
+  }
+
+  /* ===== TOOLBAR ===== */
+
+  .toolbar {
+    display: flex;
+    gap: 14px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+  }
+
+  .toolbar .field {
+    max-width: 190px;
+  }
+
+  .region-line{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+    font-size:0.85rem;
+    color:#F5F3EA;
+    margin-bottom:18px;
+  }
+
+  .region-line b{
+    color:#F5F3EA;
+  }
+
+  /* ===== MOBILE ===== */
+
+  @media (max-width: 860px) {
+    .app {
+      flex-direction: column;
+    }
+
+    .nav {
+      width: 100%;
+      flex-direction: row;
+      overflow-x: auto;
+      border-right: none;
+      border-bottom: 1px solid var(--line);
+      padding: 12px;
+      align-items: center;
+    }
+
+    .brand {
+      display: none;
+    }
+
+    .navfoot {
+      display: none;
+    }
+
+    .navbtn {
+      flex-direction: column;
+      font-size: 0.62rem;
+      gap: 4px;
+      padding: 8px 10px;
+      white-space: nowrap;
+    }
+
+    .navbtn .ic {
+      font-size: 1.15rem;
+    }
+
+    .main {
+      padding: 20px 16px 60px;
+    }
+
+    .settings-grid {
+      grid-template-columns: 1.3fr repeat(4, 0.85fr);
+      font-size: 0.72rem;
+    }
+  }
+
+  /* ===== SCROLLBAR ===== */
+
+  ::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--line);
+    border-radius: 8px;
+  }
+  /* Explanation / information card */
+  .info-card,
+  .help-card,
+  .notice-card {
+    background: #D8D3C3 !important;
+    color: #1F1F1F !important;
+    border-color: #BDB7A8 !important;
+  }
+
+  .info-card *,
+  .help-card *,
+  .notice-card * {
+    color: #1F1F1F !important;
+  }
+  .toolbar {
+    background: #D8D3C3;
+    color: #1F1F1F;
+    border: 1px solid #BDB7A8;
+    border-radius: 14px;
+    padding: 16px;
+  }
+
+  .toolbar .field {
+    color: #1F1F1F;
+  }
+
+  .toolbar input,
+  .toolbar select {
+    background: #D8D3C3 !important;
+    color: #1F1F1F !important;
+    border: 1px solid #BDB7A8 !important;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <nav class="nav" id="nav">
+    <div class="brand">
+      <svg viewBox="0 0 64 64" fill="none"><path d="M14 24h36l-4 28a4 4 0 0 1-4 3.4H22a4 4 0 0 1-4-3.4L14 24Z" fill="var(--accent)"/><path d="M22 24c0-8 4.5-13 10-13s10 5 10 13" stroke="var(--primary)" stroke-width="4" stroke-linecap="round"/><circle cx="24" cy="34" r="2.4" fill="var(--primary-ink)"/><circle cx="32" cy="38" r="2.4" fill="var(--primary-ink)"/><circle cx="40" cy="34" r="2.4" fill="var(--primary-ink)"/></svg>
+      <div class="txt">Market & Menu<span>Prep smart. Shop cheap.</span></div>
+    </div>
+    <button class="navbtn" data-tab="budget"><span class="ic">💶</span><span>Budget</span></button>
+    <button class="navbtn" data-tab="planner"><span class="ic">📅</span><span>Planner</span></button>
+    <button class="navbtn" data-tab="recipes"><span class="ic">🍲</span><span>Recipes</span></button>
+    <button class="navbtn" data-tab="shopping"><span class="ic">🧺</span><span>Shopping List</span></button>
+    <button class="navbtn" data-tab="weightgoal"><span class="ic">⚖️</span><span>Weight Goal</span></button>
+    <button class="navbtn" data-tab="calories"><span class="ic">🔥</span><span>Calories</span></button>
+    <button class="navbtn" data-tab="settings"><span class="ic">⚙️</span><span>Settings</span></button>
+    <div class="navfoot">Prices are rough regional estimates, not live data. Edit them any time in Settings once you've seen a real receipt.</div>
+  </nav>
+  <main class="main" id="main"></main>
+</div>
+
+<script>
+/* ============================= REGIONS & PRICING ============================= */
+
+const SLOTS = ["premium","standard","discount1","discount2"];
+
+const REGIONS = [
+  {id:"nl-eindhoven", country:"Netherlands", city:"Eindhoven", currency:"EUR", symbol:"€", fx:1, mMain:1.00, mDiscount:1.00, stores:{premium:"Albert Heijn", standard:"Jumbo", discount1:"Lidl", discount2:"Aldi"}},
+  {id:"nl-amsterdam", country:"Netherlands", city:"Amsterdam", currency:"EUR", symbol:"€", fx:1, mMain:1.06, mDiscount:1.03, stores:{premium:"Albert Heijn", standard:"Jumbo", discount1:"Lidl", discount2:"Aldi"}},
+  {id:"nl-utrecht", country:"Netherlands", city:"Utrecht", currency:"EUR", symbol:"€", fx:1, mMain:1.02, mDiscount:1.01, stores:{premium:"Albert Heijn", standard:"Jumbo", discount1:"Lidl", discount2:"Aldi"}},
+  {id:"be-antwerp", country:"Belgium", city:"Antwerp", currency:"EUR", symbol:"€", fx:1, mMain:1.08, mDiscount:1.04, stores:{premium:"Delhaize", standard:"Carrefour", discount1:"Lidl", discount2:"Aldi"}},
+  {id:"be-brussels", country:"Belgium", city:"Brussels", currency:"EUR", symbol:"€", fx:1, mMain:1.13, mDiscount:1.05, stores:{premium:"Delhaize", standard:"Carrefour", discount1:"Lidl", discount2:"Aldi"}},
+  {id:"de-berlin", country:"Germany", city:"Berlin", currency:"EUR", symbol:"€", fx:1, mMain:0.93, mDiscount:0.92, stores:{premium:"Rewe", standard:"Edeka", discount1:"Lidl", discount2:"Aldi"}},
+  {id:"de-munich", country:"Germany", city:"Munich", currency:"EUR", symbol:"€", fx:1, mMain:1.02, mDiscount:0.97, stores:{premium:"Rewe", standard:"Edeka", discount1:"Lidl", discount2:"Aldi"}},
+  {id:"fr-paris", country:"France", city:"Paris", currency:"EUR", symbol:"€", fx:1, mMain:1.25, mDiscount:1.10, stores:{premium:"Monoprix", standard:"Carrefour", discount1:"Lidl", discount2:"Aldi"}},
+  {id:"fr-lyon", country:"France", city:"Lyon", currency:"EUR", symbol:"€", fx:1, mMain:1.08, mDiscount:1.03, stores:{premium:"Monoprix", standard:"Carrefour", discount1:"Lidl", discount2:"Aldi"}},
+  {id:"es-madrid", country:"Spain", city:"Madrid", currency:"EUR", symbol:"€", fx:1, mMain:0.88, mDiscount:0.90, stores:{premium:"El Corte Inglés", standard:"Mercadona", discount1:"Lidl", discount2:"Aldi"}},
+  {id:"es-barcelona", country:"Spain", city:"Barcelona", currency:"EUR", symbol:"€", fx:1, mMain:0.94, mDiscount:0.93, stores:{premium:"El Corte Inglés", standard:"Mercadona", discount1:"Lidl", discount2:"Aldi"}},
+  {id:"it-rome", country:"Italy", city:"Rome", currency:"EUR", symbol:"€", fx:1, mMain:0.95, mDiscount:0.93, stores:{premium:"Esselunga", standard:"Conad", discount1:"Lidl", discount2:"Aldi"}},
+  {id:"it-milan", country:"Italy", city:"Milan", currency:"EUR", symbol:"€", fx:1, mMain:1.05, mDiscount:0.98, stores:{premium:"Esselunga", standard:"Conad", discount1:"Lidl", discount2:"Aldi"}},
+  {id:"at-vienna", country:"Austria", city:"Vienna", currency:"EUR", symbol:"€", fx:1, mMain:1.05, mDiscount:1.00, stores:{premium:"Billa", standard:"Spar", discount1:"Lidl", discount2:"Hofer"}},
+  {id:"uk-london", country:"United Kingdom", city:"London", currency:"GBP", symbol:"£", fx:0.85, mMain:1.18, mDiscount:1.05, stores:{premium:"Waitrose", standard:"Tesco", discount1:"Lidl", discount2:"Aldi"}},
+];
+const REGION_BY_ID = Object.fromEntries(REGIONS.map(r=>[r.id,r]));
+const COUNTRIES = [...new Set(REGIONS.map(r=>r.country))];
+
+function currentRegion(){ return REGION_BY_ID[state.region] || REGIONS[0]; }
+function storeLabel(slot){ return currentRegion().stores[slot]; }
+function regionMultiplier(slot){
+  const r = currentRegion();
+  return (slot==="discount1" || slot==="discount2") ? r.mDiscount : r.mMain;
+}
+function basePriceFor(ingId, slot){
+  const base = ING[ingId].prices[slot];
+  if(base===null || base===undefined) return null;
+  const reg = currentRegion();
+  return Math.round(base * regionMultiplier(slot) * (reg.fx||1) * 100) / 100;
+}
+function priceFor(ingId, slot){
+  const regionId = state.region;
+  const regOv = state.priceOverrides[regionId];
+  const ov = regOv && regOv[ingId] && regOv[ingId][slot];
+  if(ov !== undefined && ov !== null && ov !== "") return Number(ov);
+  return basePriceFor(ingId, slot);
+}
+function cheapestPriceFor(ingId){
+  const vals = SLOTS.map(s=>priceFor(ingId,s)).filter(v=>v!==null && v!==undefined);
+  return vals.length ? Math.min(...vals) : null;
+}
+
+/* ============================= INGREDIENT & RECIPE DATA ============================= */
+
+// Ingredient DB. unit is a display label. packageSize = amount per purchasable package in that unit.
+// prices are Eindhoven-baseline estimates per store "slot"; other regions scale these via the
+// multipliers above. null = not typically sold at that slot.
+const INGREDIENTS = [
+  {id:"chickenbreast", name:"Chicken breast", unit:"g", packageSize:500, prices:{premium:5.29,standard:4.99,discount1:4.49,discount2:4.29}},
+  {id:"chickenthigh", name:"Chicken thigh fillet", unit:"g", packageSize:500, prices:{premium:4.49,standard:4.29,discount1:3.99,discount2:3.89}},
+  {id:"mince", name:"Mixed ground beef & pork", unit:"g", packageSize:500, prices:{premium:4.29,standard:3.99,discount1:3.49,discount2:3.39}},
+  {id:"salmon", name:"Salmon fillet", unit:"g", packageSize:300, prices:{premium:6.99,standard:6.79,discount1:5.99,discount2:null}},
+  {id:"tunacan", name:"Canned tuna in water", unit:"can", packageSize:1, prices:{premium:1.79,standard:1.69,discount1:1.39,discount2:1.35}},
+  {id:"eggs", name:"Eggs", unit:"egg", packageSize:10, prices:{premium:2.99,standard:2.89,discount1:2.49,discount2:2.39}},
+  {id:"broccoli", name:"Broccoli", unit:"head", packageSize:1, prices:{premium:1.39,standard:1.29,discount1:0.99,discount2:0.95}},
+  {id:"pepper", name:"Red bell pepper", unit:"piece", packageSize:1, prices:{premium:0.89,standard:0.85,discount1:0.69,discount2:0.65}},
+  {id:"onion", name:"Onion", unit:"piece", packageSize:1, prices:{premium:0.35,standard:0.33,discount1:0.25,discount2:0.25}},
+  {id:"garlic", name:"Garlic (bulb)", unit:"bulb", packageSize:1, prices:{premium:0.69,standard:0.65,discount1:0.55,discount2:0.49}},
+  {id:"carrot", name:"Carrots (bag)", unit:"g", packageSize:1000, prices:{premium:1.49,standard:1.39,discount1:0.99,discount2:0.95}},
+  {id:"spinach", name:"Fresh spinach (bag)", unit:"g", packageSize:300, prices:{premium:1.99,standard:1.89,discount1:1.49,discount2:1.45}},
+  {id:"lemon", name:"Lemon", unit:"piece", packageSize:1, prices:{premium:0.59,standard:0.55,discount1:0.45,discount2:0.42}},
+  {id:"apple", name:"Apple", unit:"piece", packageSize:1, prices:{premium:0.45,standard:0.42,discount1:0.35,discount2:0.33}},
+  {id:"banana", name:"Banana", unit:"piece", packageSize:1, prices:{premium:0.29,standard:0.27,discount1:0.22,discount2:0.21}},
+  {id:"cucumber", name:"Cucumber", unit:"piece", packageSize:1, prices:{premium:0.99,standard:0.95,discount1:0.79,discount2:0.75}},
+  {id:"lettuce", name:"Lettuce (head)", unit:"head", packageSize:1, prices:{premium:1.19,standard:1.09,discount1:0.89,discount2:0.85}},
+  {id:"tomato", name:"Tomato", unit:"piece", packageSize:1, prices:{premium:0.35,standard:0.33,discount1:0.27,discount2:0.25}},
+  {id:"milk", name:"Semi-skimmed milk (carton)", unit:"ml", packageSize:1000, prices:{premium:1.29,standard:1.25,discount1:1.09,discount2:1.05}},
+  {id:"yogurt", name:"Greek yogurt (tub)", unit:"g", packageSize:500, prices:{premium:1.99,standard:1.89,discount1:1.49,discount2:1.45}},
+  {id:"cheese", name:"Grated cheese", unit:"g", packageSize:200, prices:{premium:2.49,standard:2.39,discount1:1.99,discount2:1.95}},
+  {id:"lentils", name:"Red lentils (bag)", unit:"g", packageSize:500, prices:{premium:2.19,standard:1.99,discount1:1.69,discount2:1.59}},
+  {id:"oats", name:"Rolled oats (bag)", unit:"g", packageSize:500, prices:{premium:1.69,standard:1.59,discount1:1.09,discount2:1.05}},
+  {id:"rice", name:"Basmati rice (bag)", unit:"g", packageSize:1000, prices:{premium:2.99,standard:2.79,discount1:2.29,discount2:2.19}},
+  {id:"quinoa", name:"Quinoa (bag)", unit:"g", packageSize:300, prices:{premium:3.49,standard:3.29,discount1:2.79,discount2:null}},
+  {id:"pasta", name:"Wholewheat pasta (bag)", unit:"g", packageSize:500, prices:{premium:1.39,standard:1.29,discount1:0.99,discount2:0.95}},
+  {id:"wraps", name:"Tortilla wraps (pack)", unit:"wrap", packageSize:8, prices:{premium:2.19,standard:2.09,discount1:1.69,discount2:1.65}},
+  {id:"granola", name:"Granola (bag)", unit:"g", packageSize:375, prices:{premium:2.99,standard:2.79,discount1:2.29,discount2:2.19}},
+  {id:"honey", name:"Honey (jar)", unit:"g", packageSize:350, prices:{premium:3.99,standard:3.79,discount1:2.99,discount2:2.89}},
+  {id:"oliveoil", name:"Olive oil (bottle)", unit:"ml", packageSize:500, prices:{premium:4.99,standard:4.79,discount1:3.99,discount2:3.89}},
+  {id:"paprikapowder", name:"Paprika powder (jar)", unit:"g", packageSize:40, prices:{premium:1.69,standard:1.59,discount1:1.09,discount2:1.05}},
+  {id:"cuminpowder", name:"Cumin powder (jar)", unit:"g", packageSize:35, prices:{premium:1.59,standard:1.49,discount1:1.05,discount2:1.00}},
+  {id:"currypowder", name:"Curry powder (jar)", unit:"g", packageSize:38, prices:{premium:1.59,standard:1.49,discount1:1.05,discount2:1.00}},
+  {id:"cinnamon", name:"Cinnamon powder (jar)", unit:"g", packageSize:40, prices:{premium:1.39,standard:1.29,discount1:0.95,discount2:0.89}},
+  {id:"stockcubes", name:"Vegetable stock cubes (box)", unit:"cube", packageSize:10, prices:{premium:1.19,standard:1.09,discount1:0.85,discount2:0.79}},
+  {id:"chickpeas", name:"Chickpeas (can)", unit:"can", packageSize:1, prices:{premium:0.99,standard:0.95,discount1:0.79,discount2:0.75}},
+  {id:"coconutmilk", name:"Coconut milk (can)", unit:"can", packageSize:1, prices:{premium:1.49,standard:1.39,discount1:1.09,discount2:0.99}},
+  {id:"dicedtomato", name:"Diced tomatoes (can)", unit:"can", packageSize:1, prices:{premium:0.89,standard:0.85,discount1:0.65,discount2:0.59}},
+  {id:"sweetcorn", name:"Sweetcorn (can)", unit:"can", packageSize:1, prices:{premium:0.99,standard:0.95,discount1:0.75,discount2:0.72}},
+  {id:"mayo", name:"Mayonnaise (jar)", unit:"ml", packageSize:450, prices:{premium:2.19,standard:2.09,discount1:1.69,discount2:1.65}},
+  {id:"mozzarella", name:"Mozzarella ball", unit:"ball", packageSize:1, prices:{premium:1.09,standard:1.05,discount1:0.85,discount2:0.79}},
+  {id:"basil", name:"Fresh basil (pot)", unit:"bunch", packageSize:1, prices:{premium:1.99,standard:1.89,discount1:1.49,discount2:1.39}},
+  {id:"beefstrips", name:"Beef stir-fry strips", unit:"g", packageSize:400, prices:{premium:6.49,standard:6.19,discount1:5.49,discount2:5.29}},
+  {id:"noodles", name:"Egg noodles (pack)", unit:"g", packageSize:250, prices:{premium:1.49,standard:1.39,discount1:1.09,discount2:1.05}},
+  {id:"soysauce", name:"Soy sauce (bottle)", unit:"ml", packageSize:250, prices:{premium:2.19,standard:2.09,discount1:1.69,discount2:1.65}},
+  {id:"bread", name:"Wholegrain bread (loaf)", unit:"loaf", packageSize:1, prices:{premium:2.19,standard:2.09,discount1:1.49,discount2:1.39}},
+  {id:"whitebeans", name:"White kidney beans (can)", unit:"can", packageSize:1, prices:{premium:0.99,standard:0.95,discount1:0.79,discount2:0.75}},
+  {id:"sweetpotato", name:"Sweet potato", unit:"piece", packageSize:1, prices:{premium:1.09,standard:0.99,discount1:0.89,discount2:0.85}},
+  {id:"berries", name:"Frozen mixed berries (bag)", unit:"g", packageSize:300, prices:{premium:2.99,standard:2.79,discount1:2.29,discount2:2.19}},
+  {id:"feta", name:"Feta cheese", unit:"g", packageSize:200, prices:{premium:2.49,standard:2.29,discount1:1.79,discount2:1.75}},
+  {id:"olives", name:"Pitted olives (jar)", unit:"jar", packageSize:1, prices:{premium:2.19,standard:2.09,discount1:1.69,discount2:1.65}},
+  {id:"peanutbutter", name:"Peanut butter (jar)", unit:"g", packageSize:350, prices:{premium:2.99,standard:2.79,discount1:1.99,discount2:1.89}},
+  {id:"cottagecheese", name:"Cottage cheese (tub)", unit:"g", packageSize:250, prices:{premium:2.19,standard:2.09,discount1:1.69,discount2:1.65}},
+  {id:"chiaseeds", name:"Chia seeds (bag)", unit:"g", packageSize:200, prices:{premium:3.49,standard:3.29,discount1:2.49,discount2:2.39}},
+  {id:"ricecakes", name:"Rice cakes (pack)", unit:"pack", packageSize:1, prices:{premium:1.29,standard:1.19,discount1:0.89,discount2:0.85}},
+  {id:"avocado", name:"Avocado", unit:"piece", packageSize:1, prices:{premium:1.09,standard:0.99,discount1:0.85,discount2:0.79}},
+  {id:"waffle", name:"Waffles (pack)", unit:"waffle", packageSize:8, prices:{premium:2.49,standard:2.29,discount1:1.79,discount2:1.75}},
+  {id:"bagel", name:"Bagels (pack)", unit:"bagel", packageSize:4, prices:{premium:2.29,standard:2.09,discount1:1.69,discount2:1.65}},
+  {id:"smokedsalmon", name:"Smoked salmon", unit:"g", packageSize:100, prices:{premium:3.49,standard:3.29,discount1:2.79,discount2:2.69}},
+  {id:"bacon", name:"Bacon strips", unit:"g", packageSize:200, prices:{premium:2.49,standard:2.29,discount1:1.89,discount2:1.79}},
+  {id:"shrimp", name:"Peeled shrimp", unit:"g", packageSize:200, prices:{premium:4.49,standard:4.19,discount1:3.49,discount2:3.29}},
+  {id:"turkey", name:"Turkey breast / mince", unit:"g", packageSize:500, prices:{premium:5.49,standard:5.19,discount1:4.49,discount2:4.29}},
+  {id:"couscous", name:"Couscous (bag)", unit:"g", packageSize:500, prices:{premium:1.99,standard:1.79,discount1:1.39,discount2:1.35}},
+  {id:"peas", name:"Frozen peas (bag)", unit:"g", packageSize:500, prices:{premium:1.49,standard:1.39,discount1:1.09,discount2:1.05}},
+  {id:"pesto", name:"Basil pesto (jar)", unit:"g", packageSize:190, prices:{premium:2.29,standard:2.09,discount1:1.69,discount2:1.65}},
+  {id:"lasagnasheets", name:"Lasagna sheets (pack)", unit:"g", packageSize:250, prices:{premium:1.79,standard:1.69,discount1:1.29,discount2:1.25}},
+  {id:"whitefish", name:"White fish fillet", unit:"g", packageSize:300, prices:{premium:5.99,standard:5.69,discount1:4.99,discount2:null}},
+  {id:"cabbage", name:"Cabbage", unit:"head", packageSize:1, prices:{premium:1.29,standard:1.19,discount1:0.89,discount2:0.85}},
+  {id:"pork", name:"Pork shoulder / chops", unit:"g", packageSize:500, prices:{premium:4.99,standard:4.69,discount1:3.99,discount2:3.85}},
+  {id:"nuts", name:"Mixed nuts (bag)", unit:"g", packageSize:200, prices:{premium:2.99,standard:2.79,discount1:2.19,discount2:2.09}},
+  {id:"crackers", name:"Crackers (pack)", unit:"g", packageSize:250, prices:{premium:1.79,standard:1.69,discount1:1.29,discount2:1.25}},
+];
+const ING = Object.fromEntries(INGREDIENTS.map(i=>[i.id,i]));
+
+// cooking: "none" (assembly only, no pans/stove/oven) | "stovetop" | "oven"
+const RECIPES = [
+  {id:"traybake", name:"Chicken & vegetable traybake", type:"dinner", cooking:"oven", icon:"oven", servings:4, kcal:420, protein:38, carbs:18, fat:22, time:40,
+   ingredients:[["chickenbreast",600],["broccoli",2],["pepper",2],["onion",1],["garlic",0.3],["oliveoil",30],["paprikapowder",8]]},
+  {id:"lentilsoup", name:"Red lentil soup", type:"lunch", cooking:"stovetop", icon:"soup", servings:4, kcal:310, protein:17, carbs:45, fat:6, time:35,
+   ingredients:[["lentils",250],["carrot",300],["onion",1],["garlic",0.2],["stockcubes",2],["cuminpowder",6],["oliveoil",15]]},
+  {id:"oatsrecipe", name:"Overnight oats with apple", type:"breakfast", cooking:"none", icon:"bowl", servings:4, kcal:280, protein:9, carbs:48, fat:6, time:10,
+   ingredients:[["oats",200],["milk",600],["apple",2],["cinnamon",4],["honey",20]]},
+  {id:"curry", name:"Chickpea curry with rice", type:"dinner", cooking:"stovetop", icon:"bowl", servings:4, kcal:480, protein:14, carbs:68, fat:16, time:30,
+   ingredients:[["chickpeas",2],["coconutmilk",1],["onion",1],["garlic",0.3],["currypowder",10],["spinach",150],["rice",300],["oliveoil",15]]},
+  {id:"salmonbowl", name:"Salmon quinoa bowl", type:"dinner", cooking:"stovetop", icon:"bowl", servings:4, kcal:460, protein:34, carbs:38, fat:20, time:25,
+   ingredients:[["salmon",480],["quinoa",240],["broccoli",1],["lemon",1],["oliveoil",20]]},
+  {id:"meatballs", name:"Meatballs in tomato sauce", type:"dinner", cooking:"stovetop", icon:"pasta", servings:4, kcal:560, protein:32, carbs:58, fat:20, time:45,
+   ingredients:[["mince",500],["dicedtomato",2],["onion",1],["garlic",0.3],["pasta",400],["oliveoil",15]]},
+  {id:"yogbowl", name:"Greek yogurt bowl", type:"breakfast", cooking:"none", icon:"bowl", servings:4, kcal:320, protein:14, carbs:42, fat:10, time:5,
+   ingredients:[["yogurt",800],["granola",160],["banana",4],["honey",20]]},
+  {id:"eggwrap", name:"Scrambled egg & spinach wrap", type:"lunch", cooking:"stovetop", icon:"sandwich", servings:4, kcal:380, protein:22, carbs:26, fat:20, time:15,
+   ingredients:[["eggs",8],["wraps",4],["spinach",100],["cheese",80],["tomato",2]]},
+  {id:"tunasalad", name:"Tuna salad with sweetcorn", type:"lunch", cooking:"none", icon:"bowl", servings:4, kcal:290, protein:24, carbs:12, fat:16, time:10,
+   ingredients:[["tunacan",3],["sweetcorn",1],["cucumber",1],["lettuce",1],["mayo",60]]},
+  {id:"veggiesoup", name:"Vegetable soup with ground meat", type:"lunch", cooking:"stovetop", icon:"soup", servings:4, kcal:250, protein:18, carbs:16, fat:12, time:35,
+   ingredients:[["mince",300],["carrot",300],["onion",1],["garlic",0.2],["stockcubes",3],["dicedtomato",1]]},
+  {id:"shakshuka", name:"Shakshuka (eggs in tomato sauce)", type:"breakfast", cooking:"stovetop", icon:"pan", servings:4, kcal:260, protein:16, carbs:12, fat:16, time:25,
+   ingredients:[["eggs",6],["dicedtomato",2],["onion",1],["garlic",0.3],["pepper",1],["paprikapowder",6],["oliveoil",15]]},
+  {id:"capresepasta", name:"Caprese pasta salad", type:"lunch", cooking:"stovetop", icon:"pasta", servings:4, kcal:420, protein:14, carbs:58, fat:14, time:20,
+   ingredients:[["pasta",400],["tomato",4],["mozzarella",2],["basil",1],["oliveoil",20]]},
+  {id:"falafelwrap", name:"Chickpea wrap with yogurt sauce", type:"lunch", cooking:"none", icon:"sandwich", servings:4, kcal:400, protein:15, carbs:50, fat:15, time:15,
+   ingredients:[["chickpeas",2],["wraps",4],["cucumber",1],["yogurt",200],["lemon",1],["cuminpowder",8],["garlic",0.3],["oliveoil",15]]},
+  {id:"beefstirfry", name:"Beef & vegetable stir-fry with noodles", type:"dinner", cooking:"stovetop", icon:"pan", servings:4, kcal:520, protein:34, carbs:48, fat:20, time:30,
+   ingredients:[["beefstrips",500],["noodles",250],["pepper",2],["broccoli",1],["carrot",200],["garlic",0.3],["onion",1],["soysauce",40],["oliveoil",15]]},
+  {id:"pancakes", name:"Banana oat pancakes", type:"breakfast", cooking:"stovetop", icon:"pancake", servings:4, kcal:300, protein:13, carbs:42, fat:9, time:20,
+   ingredients:[["eggs",4],["banana",3],["oats",150],["milk",150],["cinnamon",4]]},
+  {id:"hummusbox", name:"Hummus & veggie snack box", type:"snack", cooking:"none", icon:"snackbox", servings:4, kcal:220, protein:8, carbs:20, fat:13, time:15,
+   ingredients:[["chickpeas",2],["oliveoil",30],["lemon",1],["garlic",0.3],["cucumber",1],["carrot",200],["pepper",1]]},
+  {id:"clubsandwich", name:"Chicken club sandwich", type:"lunch", cooking:"none", icon:"sandwich", servings:4, kcal:380, protein:26, carbs:32, fat:16, time:15,
+   ingredients:[["bread",1],["chickenbreast",300],["lettuce",1],["tomato",2],["cheese",80],["mayo",40]]},
+  {id:"minestrone", name:"Minestrone soup", type:"lunch", cooking:"stovetop", icon:"soup", servings:4, kcal:260, protein:12, carbs:38, fat:7, time:35,
+   ingredients:[["whitebeans",1],["carrot",200],["onion",1],["garlic",0.3],["dicedtomato",2],["pasta",100],["stockcubes",2],["oliveoil",15]]},
+  {id:"sweetpotatochili", name:"Baked sweet potato with chili", type:"dinner", cooking:"stovetop", icon:"pan", servings:4, kcal:480, protein:28, carbs:50, fat:18, time:45,
+   ingredients:[["sweetpotato",4],["mince",400],["whitebeans",1],["dicedtomato",2],["onion",1],["garlic",0.3],["paprikapowder",8],["cuminpowder",6]]},
+  {id:"smoothiebowl", name:"Berry smoothie bowl", type:"breakfast", cooking:"none", icon:"smoothie", servings:4, kcal:300, protein:12, carbs:48, fat:7, time:10,
+   ingredients:[["banana",2],["berries",300],["yogurt",400],["oats",80],["honey",20],["granola",80]]},
+  {id:"capresesalad", name:"Caprese salad", type:"snack", cooking:"none", icon:"bowl", servings:4, kcal:220, protein:10, carbs:6, fat:17, time:10,
+   ingredients:[["tomato",4],["mozzarella",2],["basil",1],["oliveoil",20]]},
+  {id:"greeksalad", name:"Greek salad", type:"lunch", cooking:"none", icon:"bowl", servings:4, kcal:240, protein:8, carbs:10, fat:19, time:10,
+   ingredients:[["cucumber",2],["tomato",3],["feta",150],["olives",1],["oliveoil",20]]},
+  {id:"pbtoast", name:"Peanut butter banana toast", type:"breakfast", cooking:"toast", icon:"toast", servings:4, kcal:320, protein:10, carbs:38, fat:14, time:5,
+   ingredients:[["bread",1],["banana",4],["peanutbutter",80],["honey",20]]},
+  {id:"veggiesandwich", name:"Veggie deli sandwich", type:"lunch", cooking:"none", icon:"sandwich", servings:4, kcal:340, protein:16, carbs:34, fat:14, time:10,
+   ingredients:[["bread",1],["lettuce",1],["tomato",2],["cheese",80],["mayo",40]]},
+  {id:"cottagebowl", name:"Cottage cheese fruit bowl", type:"breakfast", cooking:"none", icon:"bowl", servings:4, kcal:260, protein:20, carbs:30, fat:6, time:5,
+   ingredients:[["cottagecheese",600],["apple",2],["banana",2],["honey",20],["granola",80]]},
+  {id:"chiapudding", name:"Overnight chia pudding", type:"breakfast", cooking:"none", icon:"bowl", servings:4, kcal:250, protein:9, carbs:28, fat:11, time:10,
+   ingredients:[["chiaseeds",120],["milk",600],["honey",20],["berries",150]]},
+  {id:"eggsaladwrap", name:"Egg salad wrap", type:"lunch", cooking:"stovetop", icon:"sandwich", servings:4, kcal:360, protein:18, carbs:28, fat:20, time:15,
+   ingredients:[["eggs",8],["wraps",4],["mayo",50],["lettuce",1],["cucumber",1]]},
+  {id:"bakedsalmon", name:"Baked salmon with sweet potato", type:"dinner", cooking:"oven", icon:"oven", servings:4, kcal:480, protein:33, carbs:36, fat:22, time:35,
+   ingredients:[["salmon",480],["sweetpotato",4],["broccoli",1],["lemon",1],["oliveoil",20]]},
+  {id:"friedrice", name:"Vegetable fried rice", type:"dinner", cooking:"stovetop", icon:"pan", servings:4, kcal:420, protein:14, carbs:62, fat:12, time:25,
+   ingredients:[["rice",300],["eggs",4],["carrot",200],["pepper",1],["onion",1],["soysauce",40],["oliveoil",15]]},
+  {id:"aglioolio", name:"Spaghetti aglio e olio", type:"dinner", cooking:"stovetop", icon:"pasta", servings:4, kcal:440, protein:12, carbs:64, fat:15, time:20,
+   ingredients:[["pasta",400],["garlic",1],["oliveoil",45],["basil",1],["paprikapowder",4]]},
+  {id:"roastedveg", name:"Roasted vegetable & chickpea tray", type:"dinner", cooking:"oven", icon:"oven", servings:4, kcal:380, protein:13, carbs:46, fat:16, time:40,
+   ingredients:[["chickpeas",2],["broccoli",1],["pepper",2],["sweetpotato",3],["oliveoil",25],["paprikapowder",6]]},
+  {id:"tunabake", name:"Tuna pasta bake", type:"dinner", cooking:"oven", icon:"oven", servings:4, kcal:460, protein:28, carbs:50, fat:15, time:40,
+   ingredients:[["pasta",400],["tunacan",3],["sweetcorn",1],["cheese",100],["milk",200]]},
+  {id:"chickpeasalad", name:"Cucumber tomato chickpea salad", type:"lunch", cooking:"none", icon:"bowl", servings:4, kcal:280, protein:11, carbs:32, fat:12, time:10,
+   ingredients:[["chickpeas",2],["cucumber",1],["tomato",3],["onion",1],["feta",100],["oliveoil",20],["lemon",1]]},
+  {id:"parfait", name:"Fruit & yogurt parfait", type:"breakfast", cooking:"none", icon:"bowl", servings:4, kcal:260, protein:14, carbs:36, fat:7, time:5,
+   ingredients:[["yogurt",600],["granola",120],["berries",200],["honey",20]]},
+  {id:"ricecakesnack", name:"Rice cakes with cottage cheese", type:"snack", cooking:"none", icon:"snackbox", servings:4, kcal:160, protein:11, carbs:16, fat:5, time:5,
+   ingredients:[["ricecakes",1],["cottagecheese",300],["cucumber",1]]},
+  {id:"bakedchicken", name:"Baked chicken thighs with vegetables", type:"dinner", cooking:"oven", icon:"oven", servings:4, kcal:460, protein:32, carbs:20, fat:26, time:45,
+   ingredients:[["chickenthigh",600],["carrot",300],["pepper",2],["onion",1],["oliveoil",25],["paprikapowder",8]]},
+  {id:"veggieomelet", name:"Vegetable omelet", type:"breakfast", cooking:"stovetop", icon:"egg", servings:4, kcal:280, protein:19, carbs:8, fat:19, time:15,
+   ingredients:[["eggs",8],["pepper",1],["onion",1],["spinach",100],["cheese",60],["oliveoil",15]]},
+  {id:"beancornsalad", name:"Bean & corn salad", type:"lunch", cooking:"none", icon:"bowl", servings:4, kcal:240, protein:11, carbs:32, fat:8, time:10,
+   ingredients:[["whitebeans",2],["sweetcorn",1],["pepper",1],["onion",1],["lemon",1],["oliveoil",20]]},
+  {id:"muesli", name:"Classic muesli bowl", type:"breakfast", cooking:"none", icon:"bowl", servings:4, kcal:270, protein:8, carbs:46, fat:5, time:5,
+   ingredients:[["oats",200],["milk",600],["apple",2],["banana",2],["honey",20]]},
+  {id:"frenchtoast", name:"French toast", type:"breakfast", cooking:"stovetop", icon:"toast", servings:4, kcal:320, protein:12, carbs:40, fat:11, time:15,
+   ingredients:[["eggs",4],["bread",1],["milk",200],["cinnamon",4],["honey",20]]},
+  {id:"avocadotoast", name:"Avocado toast", type:"breakfast", cooking:"none", icon:"toast", servings:4, kcal:300, protein:8, carbs:28, fat:18, time:10,
+   ingredients:[["bread",1],["avocado",2],["lemon",1],["tomato",2]]},
+  {id:"breakfastburrito", name:"Breakfast burrito", type:"breakfast", cooking:"stovetop", icon:"sandwich", servings:4, kcal:380, protein:20, carbs:26, fat:20, time:20,
+   ingredients:[["eggs",8],["wraps",4],["cheese",80],["pepper",1],["onion",1]]},
+  {id:"birchermuesli", name:"Bircher muesli", type:"breakfast", cooking:"none", icon:"bowl", servings:4, kcal:290, protein:10, carbs:44, fat:6, time:10,
+   ingredients:[["oats",200],["milk",400],["apple",2],["yogurt",200],["honey",20]]},
+  {id:"pbsmoothie", name:"Peanut butter banana smoothie", type:"breakfast", cooking:"none", icon:"smoothie", servings:4, kcal:320, protein:12, carbs:40, fat:11, time:5,
+   ingredients:[["banana",3],["milk",500],["peanutbutter",60],["honey",20],["oats",60]]},
+  {id:"poachedeggtoast", name:"Poached egg on toast", type:"breakfast", cooking:"stovetop", icon:"egg", servings:4, kcal:280, protein:16, carbs:24, fat:13, time:15,
+   ingredients:[["eggs",4],["bread",1],["spinach",80],["oliveoil",10]]},
+  {id:"wafflesfruit", name:"Waffles with fruit", type:"breakfast", cooking:"toast", icon:"pancake", servings:4, kcal:310, protein:8, carbs:42, fat:12, time:10,
+   ingredients:[["waffle",8],["banana",2],["berries",150],["honey",20]]},
+  {id:"breakfastquesadilla", name:"Breakfast quesadilla", type:"breakfast", cooking:"stovetop", icon:"sandwich", servings:4, kcal:360, protein:18, carbs:28, fat:20, time:15,
+   ingredients:[["wraps",4],["cheese",100],["eggs",4],["pepper",1]]},
+  {id:"salmonbagel", name:"Smoked salmon bagel", type:"breakfast", cooking:"none", icon:"sandwich", servings:4, kcal:340, protein:22, carbs:30, fat:14, time:10,
+   ingredients:[["bagel",4],["smokedsalmon",200],["cottagecheese",200],["cucumber",1]]},
+  {id:"caesarsalad", name:"Chicken Caesar salad", type:"lunch", cooking:"none", icon:"bowl", servings:4, kcal:380, protein:30, carbs:18, fat:20, time:15,
+   ingredients:[["lettuce",1],["chickenbreast",400],["cheese",60],["bread",0.3],["mayo",30]]},
+  {id:"bltwrap", name:"BLT wrap", type:"lunch", cooking:"stovetop", icon:"sandwich", servings:4, kcal:400, protein:16, carbs:30, fat:24, time:15,
+   ingredients:[["wraps",4],["bacon",150],["lettuce",1],["tomato",2],["mayo",40]]},
+  {id:"tabbouleh", name:"Quinoa tabbouleh salad", type:"lunch", cooking:"stovetop", icon:"bowl", servings:4, kcal:300, protein:8, carbs:40, fat:12, time:20,
+   ingredients:[["quinoa",240],["tomato",3],["cucumber",1],["lemon",1],["oliveoil",20],["basil",1]]},
+  {id:"chickentortillasoup", name:"Chicken tortilla soup", type:"lunch", cooking:"stovetop", icon:"soup", servings:4, kcal:340, protein:28, carbs:26, fat:12, time:30,
+   ingredients:[["chickenbreast",400],["dicedtomato",2],["onion",1],["garlic",0.3],["sweetcorn",1],["wraps",2],["cuminpowder",8]]},
+  {id:"shrimpstirfry", name:"Shrimp stir-fry with noodles", type:"lunch", cooking:"stovetop", icon:"pan", servings:4, kcal:380, protein:26, carbs:40, fat:12, time:20,
+   ingredients:[["shrimp",400],["noodles",250],["pepper",2],["garlic",0.3],["soysauce",40],["oliveoil",15]]},
+  {id:"lentildal", name:"Lentil & spinach dal", type:"lunch", cooking:"stovetop", icon:"bowl", servings:4, kcal:420, protein:16, carbs:58, fat:14, time:30,
+   ingredients:[["lentils",250],["spinach",150],["onion",1],["garlic",0.3],["currypowder",10],["coconutmilk",1],["rice",200]]},
+  {id:"turkeywrap", name:"Turkey & avocado wrap", type:"lunch", cooking:"none", icon:"sandwich", servings:4, kcal:360, protein:24, carbs:28, fat:16, time:10,
+   ingredients:[["turkey",300],["wraps",4],["avocado",2],["lettuce",1],["tomato",2]]},
+  {id:"couscoussalad", name:"Mediterranean couscous salad", type:"lunch", cooking:"none", icon:"bowl", servings:4, kcal:360, protein:12, carbs:46, fat:14, time:15,
+   ingredients:[["couscous",250],["chickpeas",1],["cucumber",1],["tomato",2],["feta",100],["oliveoil",20],["lemon",1]]},
+  {id:"peasoup", name:"Pea soup", type:"lunch", cooking:"stovetop", icon:"soup", servings:4, kcal:220, protein:10, carbs:24, fat:8, time:20,
+   ingredients:[["peas",500],["onion",1],["stockcubes",2],["milk",200]]},
+  {id:"chickenpestopasta", name:"Chicken pesto pasta", type:"lunch", cooking:"stovetop", icon:"pasta", servings:4, kcal:480, protein:32, carbs:48, fat:18, time:25,
+   ingredients:[["pasta",400],["chickenbreast",400],["pesto",100],["tomato",2],["cheese",60]]},
+  {id:"falafelbowl", name:"Falafel bowl with rice", type:"lunch", cooking:"stovetop", icon:"bowl", servings:4, kcal:420, protein:14, carbs:60, fat:12, time:30,
+   ingredients:[["chickpeas",2],["rice",300],["cucumber",1],["tomato",2],["yogurt",200],["cuminpowder",8]]},
+  {id:"eggfriednoodles", name:"Egg fried noodles", type:"lunch", cooking:"stovetop", icon:"pan", servings:4, kcal:400, protein:16, carbs:50, fat:14, time:20,
+   ingredients:[["noodles",250],["eggs",4],["carrot",200],["pepper",1],["soysauce",40],["oliveoil",15]]},
+  {id:"beeflasagna", name:"Beef lasagna", type:"dinner", cooking:"oven", icon:"oven", servings:4, kcal:540, protein:30, carbs:42, fat:26, time:60,
+   ingredients:[["mince",500],["dicedtomato",2],["cheese",150],["milk",200],["lasagnasheets",250],["onion",1],["garlic",0.3]]},
+  {id:"fishtacos", name:"Fish tacos", type:"dinner", cooking:"stovetop", icon:"pan", servings:4, kcal:380, protein:26, carbs:34, fat:14, time:25,
+   ingredients:[["whitefish",400],["wraps",4],["cabbage",1],["mayo",40],["lemon",1]]},
+  {id:"thaicurry", name:"Thai-style green curry with chicken", type:"dinner", cooking:"stovetop", icon:"pan", servings:4, kcal:480, protein:30, carbs:42, fat:20, time:30,
+   ingredients:[["chickenbreast",500],["coconutmilk",1],["currypowder",10],["pepper",1],["rice",300],["spinach",100]]},
+  {id:"pulledpork", name:"BBQ pulled pork sandwich", type:"dinner", cooking:"oven", icon:"oven", servings:4, kcal:520, protein:32, carbs:40, fat:22, time:90,
+   ingredients:[["pork",600],["bread",1],["cabbage",1],["mayo",40]]},
+  {id:"stuffedpeppers", name:"Stuffed bell peppers", type:"dinner", cooking:"oven", icon:"oven", servings:4, kcal:420, protein:24, carbs:34, fat:20, time:45,
+   ingredients:[["pepper",4],["mince",400],["rice",200],["dicedtomato",1],["cheese",80],["onion",1]]},
+  {id:"bakedcod", name:"Baked cod with vegetables", type:"dinner", cooking:"oven", icon:"oven", servings:4, kcal:340, protein:30, carbs:14, fat:16, time:30,
+   ingredients:[["whitefish",400],["broccoli",1],["carrot",200],["lemon",1],["oliveoil",20]]},
+  {id:"veggielasagna", name:"Vegetable lasagna", type:"dinner", cooking:"oven", icon:"oven", servings:4, kcal:420, protein:18, carbs:46, fat:18, time:55,
+   ingredients:[["lasagnasheets",250],["spinach",200],["dicedtomato",2],["cheese",150],["milk",200],["onion",1],["garlic",0.3]]},
+  {id:"chickenfajitas", name:"Chicken fajitas", type:"dinner", cooking:"stovetop", icon:"pan", servings:4, kcal:420, protein:30, carbs:36, fat:16, time:25,
+   ingredients:[["chickenbreast",500],["pepper",2],["onion",1],["wraps",4],["cheese",60],["paprikapowder",8]]},
+  {id:"porkchops", name:"Pork chops with roasted vegetables", type:"dinner", cooking:"oven", icon:"oven", servings:4, kcal:460, protein:34, carbs:30, fat:20, time:40,
+   ingredients:[["pork",500],["sweetpotato",4],["broccoli",1],["oliveoil",20],["paprikapowder",6]]},
+  {id:"chiliconcarne", name:"Beef chili con carne", type:"dinner", cooking:"stovetop", icon:"pan", servings:4, kcal:500, protein:30, carbs:48, fat:18, time:40,
+   ingredients:[["mince",500],["whitebeans",1],["dicedtomato",2],["onion",1],["garlic",0.3],["paprikapowder",8],["cuminpowder",6],["rice",250]]},
+  {id:"bakedziti", name:"Baked ziti", type:"dinner", cooking:"oven", icon:"oven", servings:4, kcal:520, protein:28, carbs:50, fat:22, time:45,
+   ingredients:[["pasta",400],["dicedtomato",2],["cheese",150],["mince",300],["onion",1],["garlic",0.3]]},
+  {id:"paella", name:"Vegetable paella", type:"dinner", cooking:"stovetop", icon:"pan", servings:4, kcal:400, protein:12, carbs:60, fat:10, time:35,
+   ingredients:[["rice",300],["pepper",2],["chickpeas",1],["dicedtomato",1],["paprikapowder",8],["stockcubes",2]]},
+  {id:"honeygarlicsalmon", name:"Honey garlic salmon", type:"dinner", cooking:"oven", icon:"oven", servings:4, kcal:480, protein:32, carbs:46, fat:16, time:30,
+   ingredients:[["salmon",480],["honey",30],["garlic",0.5],["broccoli",1],["rice",250]]},
+  {id:"turkeymeatloaf", name:"Turkey meatloaf", type:"dinner", cooking:"oven", icon:"oven", servings:4, kcal:380, protein:30, carbs:20, fat:18, time:55,
+   ingredients:[["turkey",500],["bread",0.3],["onion",1],["garlic",0.3],["dicedtomato",1]]},
+  {id:"trailmix", name:"Trail mix", type:"snack", cooking:"none", icon:"snackbox", servings:4, kcal:280, protein:8, carbs:24, fat:16, time:5,
+   ingredients:[["nuts",150],["berries",100],["granola",80]]},
+  {id:"applepb", name:"Apple with peanut butter", type:"snack", cooking:"none", icon:"snackbox", servings:4, kcal:220, protein:7, carbs:22, fat:12, time:5,
+   ingredients:[["apple",4],["peanutbutter",80]]},
+  {id:"yogurtdip", name:"Yogurt & honey dip with fruit", type:"snack", cooking:"none", icon:"bowl", servings:4, kcal:200, protein:9, carbs:30, fat:5, time:5,
+   ingredients:[["yogurt",400],["honey",30],["banana",2],["apple",2]]},
+  {id:"cheesecrackers", name:"Cheese & cracker plate", type:"snack", cooking:"none", icon:"snackbox", servings:4, kcal:260, protein:10, carbs:22, fat:14, time:5,
+   ingredients:[["crackers",150],["cheese",120],["apple",2]]},
+  {id:"veggiesticks", name:"Veggie sticks with yogurt dip", type:"snack", cooking:"none", icon:"snackbox", servings:4, kcal:140, protein:6, carbs:14, fat:6, time:10,
+   ingredients:[["cucumber",2],["carrot",200],["yogurt",200],["garlic",0.2],["lemon",1]]},
+  {id:"boiledeggsnack", name:"Boiled eggs snack pack", type:"snack", cooking:"stovetop", icon:"egg", servings:4, kcal:160, protein:12, carbs:4, fat:10, time:15,
+   ingredients:[["eggs",8],["cucumber",1],["tomato",2]]},
+  {id:"proteinsmoothie", name:"Protein smoothie", type:"snack", cooking:"none", icon:"smoothie", servings:4, kcal:380, protein:16, carbs:46, fat:14, time:5,
+   ingredients:[["milk",600],["peanutbutter",60],["banana",3],["honey",20],["oats",60]]},
+  {id:"ricecakespb", name:"Rice cakes with peanut butter and banana", type:"snack", cooking:"none", icon:"snackbox", servings:4, kcal:240, protein:7, carbs:30, fat:10, time:5,
+   ingredients:[["ricecakes",1],["peanutbutter",80],["banana",3]]},
+  {id:"beansontoast", name:"Beans on toast", type:"lunch", cooking:"stovetop", icon:"toast", servings:4, kcal:320, protein:16, carbs:40, fat:10, time:10,
+   ingredients:[["bread",1],["whitebeans",2],["cheese",60]]},
+  {id:"eggfriedricepeas", name:"Egg fried rice with peas", type:"dinner", cooking:"stovetop", icon:"pan", servings:4, kcal:380, protein:14, carbs:54, fat:12, time:20,
+   ingredients:[["rice",300],["eggs",4],["peas",200],["soysauce",30],["oliveoil",15]]},
+  {id:"tomatopasta", name:"Simple tomato pasta", type:"dinner", cooking:"stovetop", icon:"pasta", servings:4, kcal:420, protein:12, carbs:68, fat:10, time:20,
+   ingredients:[["pasta",400],["dicedtomato",2],["garlic",0.5],["oliveoil",20],["basil",1]]},
+  {id:"pboatmeal", name:"Peanut butter oatmeal", type:"breakfast", cooking:"stovetop", icon:"bowl", servings:4, kcal:360, protein:12, carbs:46, fat:14, time:10,
+   ingredients:[["oats",200],["milk",600],["peanutbutter",60],["honey",20]]},
+  {id:"lentilcarrotstew", name:"Lentil & carrot stew", type:"dinner", cooking:"stovetop", icon:"soup", servings:4, kcal:320, protein:16, carbs:50, fat:6, time:35,
+   ingredients:[["lentils",300],["carrot",400],["onion",1],["stockcubes",3],["cuminpowder",6]]},
+  {id:"cheesyeggstoast", name:"Cheesy scrambled eggs on toast", type:"breakfast", cooking:"stovetop", icon:"egg", servings:4, kcal:340, protein:20, carbs:24, fat:18, time:15,
+   ingredients:[["eggs",8],["bread",1],["cheese",80]]},
+];
+const REC = Object.fromEntries(RECIPES.map(r=>[r.id,r]));
+const TYPE_LABEL = {breakfast:"Breakfast", lunch:"Lunch", dinner:"Dinner", snack:"Snack"};
+const COOK_LABEL = {none:"No cooking", stovetop:"Stovetop", oven:"Oven", toast:"Toaster only"};
+function cookTagClass(c){ return c==="none" ? "cook-none" : (c==="oven" ? "cook-oven" : "cook-stovetop"); }
+
+/* ============================= MEAL ICONS (original vector illustrations) ============================= */
+
+function svgIcon(key){
+  const ink = "var(--ink)", acc = "var(--accent)", pri="var(--primary)";
+  const bodies = {
+    bowl: `<path d="M6 30h52a22 26 0 0 1-52 0Z" fill="${ink}" fill-opacity=".78"/><ellipse cx="32" cy="30" rx="26" ry="7" fill="${ink}" fill-opacity=".55"/><circle cx="24" cy="20" r="2.6" fill="${acc}"/><circle cx="32" cy="16" r="2.6" fill="${acc}"/><circle cx="40" cy="20" r="2.6" fill="${acc}"/>`,
+    soup: `<rect x="12" y="28" width="40" height="22" rx="7" fill="${ink}" fill-opacity=".78"/><rect x="4" y="33" width="10" height="7" rx="3.5" fill="${ink}" fill-opacity=".78"/><rect x="50" y="33" width="10" height="7" rx="3.5" fill="${ink}" fill-opacity=".78"/><path d="M22 22c2-4-2-5 0-9M32 22c2-4-2-5 0-9M42 22c2-4-2-5 0-9" stroke="${acc}" stroke-width="3" stroke-linecap="round" fill="none"/>`,
+    pan: `<circle cx="26" cy="34" r="19" fill="none" stroke="${ink}" stroke-width="4"/><rect x="44" y="30" width="18" height="7" rx="3.5" fill="${ink}" fill-opacity=".78"/><circle cx="19" cy="30" r="3" fill="${acc}"/><circle cx="28" cy="40" r="3" fill="${acc}"/><circle cx="33" cy="28" r="3" fill="${acc}"/>`,
+    oven: `<rect x="6" y="18" width="52" height="32" rx="7" fill="none" stroke="${ink}" stroke-width="4"/><rect x="14" y="26" width="9" height="8" rx="2" fill="${acc}"/><rect x="27" y="26" width="9" height="8" rx="2" fill="${acc}"/><rect x="40" y="26" width="9" height="8" rx="2" fill="${acc}"/><rect x="20" y="38" width="9" height="8" rx="2" fill="${acc}"/><rect x="34" y="38" width="9" height="8" rx="2" fill="${acc}"/>`,
+    sandwich: `<path d="M12 50 32 12 52 50Z" fill="${ink}" fill-opacity=".78"/><rect x="16" y="38" width="32" height="5" fill="${acc}"/><rect x="20" y="30" width="24" height="5" fill="var(--surface)"/>`,
+    pancake: `<ellipse cx="32" cy="44" rx="22" ry="6" fill="${ink}" fill-opacity=".78"/><ellipse cx="32" cy="35" rx="19" ry="5.5" fill="${ink}" fill-opacity=".78"/><ellipse cx="32" cy="27" rx="16" ry="5" fill="${ink}" fill-opacity=".78"/><path d="M16 22c4 3 8-3 12 0s8-3 12 0s8-3 10 0" stroke="${acc}" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="32" cy="22" r="3" fill="${acc}"/>`,
+    egg: `<path d="M32 14c10 0 22 14 22 26a14 14 0 0 1-44 0c0-12 12-26 22-26Z" fill="${ink}" fill-opacity=".18"/><circle cx="34" cy="38" r="11" fill="${acc}"/>`,
+    smoothie: `<path d="M18 16h28l-6 38a4 4 0 0 1-4 3.4H28a4 4 0 0 1-4-3.4Z" fill="${ink}" fill-opacity=".78"/><rect x="34" y="4" width="4" height="18" rx="2" fill="${acc}" transform="rotate(18 34 4)"/><circle cx="24" cy="16" r="3.2" fill="${acc}"/><circle cx="32" cy="12" r="3.2" fill="${acc}"/>`,
+    pasta: `<circle cx="32" cy="32" r="24" fill="none" stroke="${ink}" stroke-width="4"/><path d="M32 32m-10 0a10 10 0 1 0 20 0a7 7 0 1 1-14 0a4 4 0 1 0 8 0" fill="none" stroke="${acc}" stroke-width="3" stroke-linecap="round"/>`,
+    toast: `<path d="M10 50V26c0-9 5-16 22-16s22 7 22 16v24Z" fill="${ink}" fill-opacity=".78"/><path d="M18 50V28c0-6 4-10 14-10s14 4 14 10v22" fill="none" stroke="var(--surface)" stroke-width="3"/><rect x="26" y="36" width="12" height="8" rx="2" fill="${acc}"/>`,
+    snackbox: `<rect x="6" y="20" width="52" height="30" rx="7" fill="none" stroke="${ink}" stroke-width="4"/><line x1="32" y1="20" x2="32" y2="50" stroke="${ink}" stroke-width="4"/><rect x="13" y="26" width="4" height="18" rx="2" fill="${acc}"/><rect x="20" y="26" width="4" height="18" rx="2" fill="${acc}"/><rect x="27" y="26" width="4" height="18" rx="2" fill="${acc}"/><circle cx="46" cy="38" r="7" fill="${acc}"/>`,
+  };
+  return `<svg viewBox="0 0 64 64">${bodies[key] || bodies.bowl}</svg>`;
+}
+
+/* ============================= STATE ============================= */
+
+const LS_KEY = "marketmenu_state_v3";
+function loadState(){
+  let s = {};
+  try{ s = JSON.parse(localStorage.getItem(LS_KEY) || "{}"); }catch(e){ s = {}; }
+  return Object.assign({
+    servingsWanted: {},   // recipeId -> total servings wanted this week
+    priceOverrides: {},   // regionId -> ingredientId -> {slot: price}
+    pantry: {},           // ingredientId -> true if owned
+    goal: 2200,
+    log: {},              // "YYYY-MM-DD" -> [{name, kcal}]
+    bought: {},           // ingredientId -> true if checked off shopping list
+    lastBudget: 40,
+    household: 2,
+    region: "nl-eindhoven",
+    cookFilter: "any",    // any | none | cooking
+    profile: { sex:"female", age:30, height:170, weight:75, activity:"light", goalWeight:68, pace:0.5 },
+    weightLog: []
+  }, s);
+}
+let state = loadState();
+function saveState(){
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){}
+}
+function todayKey(){
+  const d = new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+
+/* ============================= NAV ============================= */
+
+let currentTab = "budget";
+document.getElementById("nav").addEventListener("click", e=>{
+  const btn = e.target.closest(".navbtn");
+  if(!btn) return;
+  currentTab = btn.dataset.tab;
+  render();
+});
+
+let renderDebounce = null;
+function scheduleRender(delay){
+  if(renderDebounce) clearTimeout(renderDebounce);
+  renderDebounce = setTimeout(()=>{ renderDebounce=null; render(); }, delay||450);
+}
+
+function fmtMoney(n){
+  const reg = currentRegion();
+  if(reg.currency==="GBP") return "£" + n.toFixed(2);
+  return reg.symbol + " " + n.toFixed(2).replace(".", ",");
+}
+function fmtQty(q){ return (Math.round(q*10)/10).toString(); }
+
+/* ============================= RENDER ROOT ============================= */
+
+function render(){
+  document.querySelectorAll(".navbtn").forEach(b=> b.classList.toggle("active", b.dataset.tab===currentTab));
+  const main = document.getElementById("main");
+  if(currentTab==="budget") main.innerHTML = renderBudget();
+  else if(currentTab==="planner") main.innerHTML = renderPlanner();
+  else if(currentTab==="recipes") main.innerHTML = renderRecipes();
+  else if(currentTab==="shopping") main.innerHTML = renderShopping();
+  else if(currentTab==="weightgoal") main.innerHTML = renderWeightGoal();
+  else if(currentTab==="calories") main.innerHTML = renderCalories();
+  else if(currentTab==="settings") main.innerHTML = renderSettings();
+  attachHandlers();
+}
+
+function getFilteredRecipes(){
+  if(state.cookFilter==="none") return RECIPES.filter(r=>r.cooking==="none" || r.cooking==="toast");
+  if(state.cookFilter==="cooking") return RECIPES.filter(r=>r.cooking!=="none" && r.cooking!=="toast");
+  return RECIPES;
+}
+
+function cookFilterSegment(idPrefix){
+  const opts = [["any","All meals"],["none","No cooking"],["cooking","Cooking required"]];
+  return `<div class="segmented" id="${idPrefix}">${opts.map(([k,l])=>`<button data-cookfilter="${k}" class="${state.cookFilter===k?'active':''}">${l}</button>`).join("")}</div>`;
+}
+
+function regionSelectors(idPrefix){
+  const reg = currentRegion();
+  const countryOpts = COUNTRIES.map(c=>`<option value="${c}" ${reg.country===c?'selected':''}>${c}</option>`).join("");
+  const cities = REGIONS.filter(r=>r.country===reg.country);
+  const cityOpts = cities.map(r=>`<option value="${r.id}" ${r.id===reg.id?'selected':''}>${r.city}</option>`).join("");
+  return `
+    <label class="field">Country
+      <select id="${idPrefix}Country">${countryOpts}</select>
+    </label>
+    <label class="field">City
+      <select id="${idPrefix}City">${cityOpts}</select>
+    </label>`;
+}
+
+/* ============================= SHARED: AGGREGATION & PRICING ============================= */
+
+// Aggregate ingredient quantities for a servings map {recipeId: totalServingsWanted}.
+// Ingredient amounts scale continuously from the recipe's base yield (r.servings).
+function aggregateFor(servingsMap){
+  const agg = {};
+  RECIPES.forEach(r=>{
+    const totalServings = servingsMap[r.id] || 0;
+    if(totalServings<=0) return;
+    const scale = totalServings / r.servings;
+    r.ingredients.forEach(([id,qty])=>{
+      agg[id] = (agg[id]||0) + qty*scale;
+    });
+  });
+  return agg;
+}
+
+function buildRows(agg){
+  return Object.keys(agg).map(id=>{
+    const ing = ING[id];
+    const qty = agg[id];
+    const packages = Math.ceil(qty / ing.packageSize);
+    const costs = {};
+    SLOTS.forEach(s=>{
+      const p = priceFor(id,s);
+      costs[s] = (p===null || p===undefined) ? null : packages*p;
+    });
+    const available = SLOTS.filter(s=>costs[s]!==null);
+    const cheapest = available.length ? available.reduce((a,b)=> costs[a]<costs[b]?a:b) : null;
+    return {id, ing, qty, packages, costs, cheapest};
+  });
+}
+function totalMixCost(rows){
+  return rows.reduce((sum,r)=> sum + (r.cheapest? r.costs[r.cheapest] : 0), 0);
+}
+
+/* ============================= BUDGET TAB ============================= */
+
+// Greedy planner: repeatedly adds one "household serving round" (household-size servings)
+// to whichever eligible recipe gives the most servings per euro of *additional* cost, given
+// ingredients already queued (shared staples like onion/garlic are only paid for once per package).
+function suggestPlanForBudget(budget, household){
+  const hh = household || state.household || 1;
+  const recipes = getFilteredRecipes();
+  const servings = {}; recipes.forEach(r=> servings[r.id]=0);
+  const agg = {};
+  let spent = 0;
+  const maxServingsPerRecipe = hh * 5;
+  const maxIterations = 40;
+
+  for(let iter=0; iter<maxIterations; iter++){
+    let bestRecipe = null, bestCost = 0, bestScore = -1, bestDelta = null;
+
+    for(const r of recipes){
+      if(servings[r.id] + hh > maxServingsPerRecipe) continue;
+      const scale = hh / r.servings;
+      let cost = 0, feasible = true;
+      const delta = {};
+      for(const [id,qty] of r.ingredients){
+        const addQty = qty*scale;
+        const ing = ING[id];
+        const have = agg[id] || 0;
+        const packagesBefore = have>0 ? Math.ceil(have/ing.packageSize) : 0;
+        const packagesAfter = Math.ceil((have+addQty)/ing.packageSize);
+        const addPackages = packagesAfter - packagesBefore;
+        if(addPackages > 0){
+          const cp = cheapestPriceFor(id);
+          if(cp===null){ feasible = false; break; }
+          cost += addPackages * cp;
+        }
+        delta[id] = addQty;
+      }
+      if(!feasible) continue;
+      if(spent + cost > budget + 0.001) continue;
+
+      const score = cost <= 0.0001 ? Infinity : (hh / cost);
+      if(score > bestScore){
+        bestScore = score; bestRecipe = r; bestCost = cost; bestDelta = delta;
+      }
+    }
+
+    if(!bestRecipe) break;
+    servings[bestRecipe.id] += hh;
+    spent += bestCost;
+    Object.entries(bestDelta).forEach(([id,qty])=>{ agg[id] = (agg[id]||0) + qty; });
+  }
+
+  return {servings, agg, spent};
+}
+
+function renderBudget(){
+  const budget = state.lastBudget || 40;
+  const hh = state.household || 1;
+  const reg = currentRegion();
+
+  // If nothing has ever been planned, seed the real plan with a first suggestion so
+  // this tab edits the same live data as Planner/Shopping — not a disconnected preview.
+  const hasAnyPlan = Object.values(state.servingsWanted).some(v=>v>0);
+  if(!hasAnyPlan){
+    const seeded = suggestPlanForBudget(budget, hh);
+    state.servingsWanted = seeded.servings;
+    saveState();
+  }
+
+  const agg = aggregateFor(state.servingsWanted);
+  const rows = buildRows(agg);
+  const cost = totalMixCost(rows);
+  const usedRecipes = RECIPES.filter(r => (state.servingsWanted[r.id]||0) > 0);
+  const totalPortions = usedRecipes.reduce((s,r)=> s + (state.servingsWanted[r.id]||0), 0);
+  const totalKcal = usedRecipes.reduce((s,r)=> s + (state.servingsWanted[r.id]||0)*r.kcal, 0);
+  const leftover = budget - cost;
+
+  const recipeCards = usedRecipes.length ? usedRecipes.map(r=>{
+    const n = state.servingsWanted[r.id] || 0;
+    return `<div class="card recipe-card">
+      <div class="mealicon ${r.icon}">${svgIcon(r.icon)}</div>
+      <div class="body">
+        <div class="row-between">
+          <h3>${r.name}</h3>
+        </div>
+        <div class="tagrow"><span class="tag">${TYPE_LABEL[r.type]}</span><span class="tag ${cookTagClass(r.cooking)}">${COOK_LABEL[r.cooking]}</span></div>
+        <div class="macros"><span>🔥 ${r.kcal} kcal/serving</span></div>
+        <div class="row-between" style="margin-top:6px;">
+          <span style="font-size:0.8rem;color:var(--ink-soft);">Total servings</span>
+          <div class="servings-input">
+            <input type="number" min="0" step="1" value="${n}" data-servings="${r.id}">
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join("") : `<div class="empty">Nothing planned yet — click "Find meals within budget" below, or add servings on the Recipes/Planner tab.</div>`;
+
+  const tableRows = rows.map(r=>{
+    const cells = SLOTS.map(s=>{
+      const c = r.costs[s];
+      if(c===null) return `<td class="num unavail">—</td>`;
+      const isCheap = s===r.cheapest;
+      return `<td class="num ${isCheap?'cheapest':''}">${fmtMoney(c)}</td>`;
+    }).join("");
+    return `<tr>
+      <td>${r.ing.name}</td>
+      <td class="num">${fmtQty(r.qty)} ${r.ing.unit}</td>
+      ${cells}
+      <td>${r.cheapest ? `<span class="storepill">${storeLabel(r.cheapest)}</span>` : "—"}</td>
+    </tr>`;
+  }).join("");
+
+  return `
+  <div class="tabhead">
+    <h1>Shop within a budget</h1>
+    <p>Tell me how much you want to spend, for how many people, and I'll pick a combination of recipes that gets you the most servings for that money. Every number below — servings included — stays fully editable, and changes apply straight to your real weekly plan.</p>
+  </div>
+
+  <div class="region-line">Prices shown for <b>${reg.city}, ${reg.country}</b> (${storeLabel('premium')}, ${storeLabel('standard')}, ${storeLabel('discount1')}, ${storeLabel('discount2')}).</div>
+
+  <div class="toolbar">
+    ${regionSelectors('budget')}
+    <label class="field">Cooking for how many people?
+      <input type="number" id="budgetHousehold" value="${hh}" min="1" max="12" step="1">
+    </label>
+    <label class="field">Weekly budget (${reg.symbol})
+      <input type="number" id="budgetInput" value="${budget}" step="5" min="0">
+    </label>
+    <button class="btn primary" data-act="run-budget">Find meals within budget</button>
+  </div>
+  <div style="margin-bottom:10px;display:flex;gap:8px;flex-wrap:wrap;">
+    <button class="chip" data-preset="1-20">1 person · ${reg.symbol}20/week</button>
+    <button class="chip" data-preset="1-25">1 person · ${reg.symbol}25/week</button>
+    <button class="chip" data-preset="2-40">2 people · ${reg.symbol}40/week</button>
+    <button class="chip" data-preset="4-70">4 people · ${reg.symbol}70/week</button>
+  </div>
+  <div style="margin-bottom:22px;">${cookFilterSegment('budgetCookFilter')}</div>
+
+  <div class="stat-row">
+    <div class="stat"><div class="num">${fmtMoney(cost)}</div><div class="lab">estimated cost</div></div>
+    <div class="stat"><div class="num">${fmtMoney(Math.max(leftover,0))}</div><div class="lab">left over</div></div>
+    <div class="stat"><div class="num">${totalPortions}</div><div class="lab">servings total</div></div>
+    <div class="stat"><div class="num">${totalKcal.toLocaleString('en-US')}</div><div class="lab">kcal total</div></div>
+  </div>
+
+  <div class="section-title" style="margin-top:0;">What to cook — edit servings directly here</div>
+  <div class="grid">${recipeCards}</div>
+
+  ${rows.length ? `
+  <div class="section-title">What to buy — cheapest store per item</div>
+  <div class="card" style="padding:6px 18px 18px;overflow-x:auto;">
+    <table>
+      <thead><tr><th>Item</th><th class="num">Needed</th>${SLOTS.map(s=>`<th class="num">${storeLabel(s)}</th>`).join("")}<th>Cheapest</th></tr></thead>
+      <tbody>${tableRows}</tbody>
+    </table>
+  </div>
+  ` : ""}
+  `;
+}
+
+/* ============================= PLANNER TAB ============================= */
+
+function renderPlanner(){
+  const hh = state.household || 1;
+  const recipes = getFilteredRecipes();
+  const totalPortions = recipes.reduce((sum,r)=> sum + (state.servingsWanted[r.id]||0), 0);
+  const totalKcal = recipes.reduce((sum,r)=> sum + (state.servingsWanted[r.id]||0)*r.kcal, 0);
+
+  const cards = recipes.map(r=>{
+    const n = state.servingsWanted[r.id] || 0;
+    return `<div class="card recipe-card">
+      <div class="mealicon ${r.icon}">${svgIcon(r.icon)}</div>
+      <div class="body">
+        <div class="row-between">
+          <h3>${r.name}</h3>
+        </div>
+        <div class="tagrow"><span class="tag">${TYPE_LABEL[r.type]}</span><span class="tag ${cookTagClass(r.cooking)}">${COOK_LABEL[r.cooking]}</span><span class="tag">⏱ ${r.time} min</span></div>
+        <div class="macros"><span>🔥 ${r.kcal} kcal/serving</span></div>
+        <div class="row-between" style="margin-top:6px;">
+          <span style="font-size:0.8rem;color:var(--ink-soft);">Servings this week</span>
+          <div class="servings-input">
+            <input type="number" min="0" step="1" value="${n}" data-servings="${r.id}">
+            <button class="btn ghost small" data-fillhh="${r.id}">+${hh}</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+
+  return `
+  <div class="tabhead">
+    <h1>Weekly planner</h1>
+    <p>Set how many people you're cooking for, then type exactly how many servings of each recipe you want this week. Ingredient amounts scale automatically.</p>
+  </div>
+  <div class="toolbar">
+    <label class="field">Cooking for how many people?
+      <input type="number" id="plannerHousehold" value="${hh}" min="1" max="12" step="1">
+    </label>
+  </div>
+  <div style="margin-bottom:22px;">${cookFilterSegment('plannerCookFilter')}</div>
+  <div class="stat-row">
+    <div class="stat"><div class="num">${totalPortions}</div><div class="lab">servings planned</div></div>
+    <div class="stat"><div class="num">${totalKcal.toLocaleString('en-US')}</div><div class="lab">kcal this week</div></div>
+  </div>
+  <div class="grid">${cards}</div>
+  ${totalPortions>0 ? `<div style="margin-top:24px;"><button class="btn primary" data-act="goto-shopping">See shopping list →</button></div>` : ""}
+  `;
+}
+
+/* ============================= RECIPES TAB ============================= */
+
+function renderRecipes(){
+  const pantryIds = Object.keys(state.pantry).filter(id=>state.pantry[id]);
+  const pantrySet = new Set(pantryIds);
+  const recipes = getFilteredRecipes();
+
+  const cards = recipes.map(r=>{
+    const missing = r.ingredients.filter(([id])=> !pantrySet.has(id));
+    const missCount = missing.length;
+    const badge = missCount===0 ? `<span class="missbadge ok">you have it all</span>`
+      : `<span class="missbadge some">${missCount} missing</span>`;
+    const ingrLine = r.ingredients.map(([id,qty])=>{
+      const ing = ING[id];
+      return `${fmtQty(qty)} ${ing.unit} ${ing.name.toLowerCase()}`;
+    }).join(", ");
+    return `<div class="card recipe-card">
+      <div class="mealicon ${r.icon}">${svgIcon(r.icon)}</div>
+      <div class="body">
+        <div class="row-between">
+          <h3>${r.name}</h3>
+          ${badge}
+        </div>
+        <div class="tagrow"><span class="tag">${TYPE_LABEL[r.type]}</span><span class="tag ${cookTagClass(r.cooking)}">${COOK_LABEL[r.cooking]}</span><span class="tag">base: ${r.servings} servings</span><span class="tag">${r.time} min</span></div>
+        <div class="macros"><span>🔥${r.kcal} kcal</span><span>P ${r.protein}g</span><span>C ${r.carbs}g</span><span>F ${r.fat}g</span></div>
+        <p class="ingr-list">${ingrLine}</p>
+      </div>
+    </div>`;
+  }).join("");
+
+  const pantryItems = INGREDIENTS.map(ing=>{
+    const checked = state.pantry[ing.id] ? "checked" : "";
+    return `<label class="pantry-item"><input type="checkbox" data-pantry="${ing.id}" ${checked}> ${ing.name}</label>`;
+  }).join("");
+
+  return `
+  <div class="tabhead">
+    <h1>Recipes</h1>
+    <p>${RECIPES.length} recipes with nutrition per serving. Filter by whether you feel like cooking, and tick off what you already have at home to see what you can nearly make for free.</p>
+  </div>
+  <div style="margin-bottom:22px;">${cookFilterSegment('recipesCookFilter')}</div>
+  <div class="grid">${cards}</div>
+  <div class="section-title">What do I already have?</div>
+  <div class="card" style="padding:16px;">
+    <div class="pantry-grid">${pantryItems}</div>
+  </div>
+  `;
+}
+
+/* ============================= SHOPPING LIST TAB ============================= */
+
+function renderShopping(){
+  const agg = aggregateFor(state.servingsWanted);
+  const ids = Object.keys(agg);
+  const reg = currentRegion();
+
+  if(ids.length===0){
+    return `
+    <div class="tabhead"><h1>Shopping list</h1><p>Nothing planned yet. Head to Planner and pick a few recipes for this week — or let Budget suggest a plan for you.</p></div>
+    <div class="empty"><div class="big">🧺</div>Your shopping list builds itself automatically once you plan some servings.<br><button class="btn primary" style="margin-top:14px;" data-act="goto-planner">Go to planner</button></div>
+    `;
+  }
+
+  const rows = buildRows(agg);
+
+  const storeTotals = {};
+  const storeMissing = {};
+  SLOTS.forEach(s=>{
+    let sum=0, missing=0;
+    rows.forEach(r=>{ if(r.costs[s]!==null) sum+=r.costs[s]; else missing++; });
+    storeTotals[s]=sum; storeMissing[s]=missing;
+  });
+  const fullyAvailable = SLOTS.filter(s=>storeMissing[s]===0);
+  const bestSingleStore = fullyAvailable.length
+    ? fullyAvailable.reduce((a,b)=> storeTotals[a]<storeTotals[b]?a:b)
+    : SLOTS.reduce((a,b)=> storeTotals[a]<storeTotals[b]?a:b);
+  const mixTotal = totalMixCost(rows);
+  const savings = storeTotals[bestSingleStore] - mixTotal;
+
+  const storeCards = SLOTS.map(s=>{
+    const winner = s===bestSingleStore;
+    return `<div class="store-card ${winner?'winner':''}">
+      <h4>${storeLabel(s)}</h4>
+      <div class="p">${fmtMoney(storeTotals[s])}</div>
+      <div class="s">${storeMissing[s]>0 ? storeMissing[s]+" item(s) not sold here" : "everything available"}${winner?" · cheapest single store":""}</div>
+    </div>`;
+  }).join("");
+
+  const tableRows = rows.map(r=>{
+    const cells = SLOTS.map(s=>{
+      const c = r.costs[s];
+      if(c===null) return `<td class="num unavail">—</td>`;
+      const isCheap = s===r.cheapest;
+      return `<td class="num ${isCheap?'cheapest':''}">${fmtMoney(c)}</td>`;
+    }).join("");
+    const bought = state.bought[r.id] ? "checked" : "";
+    return `<tr>
+      <td><label style="display:flex;align-items:center;gap:8px;"><input type="checkbox" data-bought="${r.id}" ${bought}> ${r.ing.name}</label></td>
+      <td class="num">${fmtQty(r.qty)} ${r.ing.unit}</td>
+      ${cells}
+      <td>${r.cheapest ? `<span class="storepill">${storeLabel(r.cheapest)}</span>` : "—"}</td>
+    </tr>`;
+  }).join("");
+
+  const activeRecipes = RECIPES.filter(r=>(state.servingsWanted[r.id]||0) > 0);
+  const planRows = activeRecipes.map(r=>`
+    <div class="row-between" style="padding:8px 0;border-bottom:1px solid var(--line);">
+      <span style="font-size:0.88rem;">${r.name}</span>
+      <div class="servings-input">
+        <input type="number" min="0" step="1" value="${state.servingsWanted[r.id]}" data-servings="${r.id}">
+        <span style="font-size:0.75rem;color:var(--ink-soft);">servings</span>
+      </div>
+    </div>`).join("");
+
+  return `
+  <div class="tabhead">
+    <h1>Shopping list</h1>
+    <p>Built from your weekly plan. Prices are estimates — edit them in Settings once you have a real receipt.</p>
+  </div>
+  <div class="region-line">Prices shown for <b>${reg.city}, ${reg.country}</b>. <button class="linkbtn" data-act="goto-settings">Change region</button></div>
+
+  <div class="section-title" style="margin-top:0;">Your plan — change total servings any time</div>
+  <div class="card" style="padding:6px 18px 4px;margin-bottom:22px;">${planRows}</div>
+
+  <div class="store-tot">${storeCards}</div>
+  <div class="card" style="padding:14px 18px;margin-bottom:22px;background:var(--good-bg);border-color:var(--good);">
+    <b style="color:var(--good);">Shopping smart saves ${fmtMoney(Math.max(savings,0))}</b>
+    <div style="font-size:0.83rem;color:var(--ink-soft);margin-top:2px;">compared to buying everything at ${storeLabel(bestSingleStore)}, if you pick the cheapest store per item instead (total ${fmtMoney(mixTotal)}).</div>
+  </div>
+  <div class="card" style="padding:6px 18px 18px;overflow-x:auto;">
+    <table>
+      <thead><tr><th>Item</th><th class="num">Needed</th>${SLOTS.map(s=>`<th class="num">${storeLabel(s)}</th>`).join("")}<th>Cheapest</th></tr></thead>
+      <tbody>${tableRows}</tbody>
+    </table>
+  </div>
+  `;
+}
+
+/* ============================= WEIGHT GOAL TAB ============================= */
+// General estimates using the Mifflin-St Jeor equation, not medical advice.
+
+const ACTIVITY_LABELS = {
+  sedentary: "Sedentary (little to no exercise)",
+  light: "Light (exercise 1–3 days/week)",
+  moderate: "Moderate (exercise 3–5 days/week)",
+  active: "Active (exercise 6–7 days/week)",
+  veryactive: "Very active (hard exercise + physical job)"
+};
+const ACTIVITY_MULT = { sedentary:1.2, light:1.375, moderate:1.55, active:1.725, veryactive:1.9 };
+const PACE_OPTIONS = [0.25, 0.5, 0.75, 1];
+const MIN_SAFE_KCAL = 1200;
+
+function bmr(profile){
+  const {sex, age, height, weight} = profile;
+  const base = 10*weight + 6.25*height - 5*age;
+  return sex==="male" ? base+5 : base-161;
+}
+function tdee(profile){ return bmr(profile) * (ACTIVITY_MULT[profile.activity] || 1.375); }
+function bmiOf(profile){ const h = profile.height/100; return profile.weight / (h*h); }
+function bmiCategory(bmi){
+  if(bmi<18.5) return "underweight";
+  if(bmi<25) return "healthy range";
+  if(bmi<30) return "above healthy range";
+  return "well above healthy range";
+}
+function calorieTargetFor(profile){
+  const t = tdee(profile);
+  const deficit = profile.pace * 1100;
+  let target = Math.round(t - deficit);
+  let clamped = false;
+  if(target < MIN_SAFE_KCAL){ target = MIN_SAFE_KCAL; clamped = true; }
+  return {tdee: Math.round(t), target, clamped};
+}
+
+function renderWeightGoal(){
+  const p = state.profile;
+  const {tdee: tdeeVal, target, clamped} = calorieTargetFor(p);
+  const bmi = bmiOf(p);
+  const goalBmi = p.goalWeight ? (p.goalWeight/((p.height/100)**2)) : null;
+  const toLose = p.weight - (p.goalWeight || p.weight);
+  const weeks = toLose > 0 ? Math.ceil(toLose / p.pace) : 0;
+
+  const paceOptions = PACE_OPTIONS.map(v=>`<option value="${v}" ${p.pace==v?'selected':''}>${v} kg/week</option>`).join("");
+  const activityOptions = Object.keys(ACTIVITY_LABELS).map(k=>`<option value="${k}" ${p.activity===k?'selected':''}>${ACTIVITY_LABELS[k]}</option>`).join("");
+
+  const log = [...state.weightLog].sort((a,b)=> a.date.localeCompare(b.date));
+  const recentLog = log.slice(-10);
+  let chart = "";
+  if(recentLog.length>=2){
+    const weights = recentLog.map(e=>e.weight);
+    const min = Math.min(...weights), max = Math.max(...weights);
+    const span = Math.max(max-min, 1);
+    const w=520,h=110,pad=10;
+    const pts = recentLog.map((e,i)=>{
+      const x = pad + (i/(recentLog.length-1))*(w-2*pad);
+      const y = h-pad - ((e.weight-min)/span)*(h-2*pad);
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(" ");
+    chart = `<svg viewBox="0 0 ${w} ${h}" style="width:100%;height:110px;">
+      <polyline points="${pts}" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+      ${recentLog.map((e,i)=>{
+        const x = pad + (i/(recentLog.length-1))*(w-2*pad);
+        const y = h-pad - ((e.weight-min)/span)*(h-2*pad);
+        return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.5" fill="var(--primary)"/>`;
+      }).join("")}
+    </svg>`;
+  }
+  const logRows = [...log].reverse().slice(0,8).map((e)=>{
+    const realIdx = state.weightLog.indexOf(e);
+    return `<div class="logitem"><span>${e.date}</span><span style="display:flex;gap:10px;align-items:center;"><b>${e.weight} kg</b><button data-rmweight="${realIdx}">✕</button></span></div>`;
+  }).join("") || `<p style="color:var(--ink-soft);font-size:0.85rem;">No weigh-ins logged yet.</p>`;
+
+  return `
+  <div class="tabhead">
+    <h1>Weight goal</h1>
+    <p>A general estimate of a healthy daily calorie target for gradual weight loss, based on the Mifflin-St Jeor formula. This isn't medical advice — check with a doctor or dietitian before starting, especially if you have a health condition, are under 18, or pregnant/breastfeeding.</p>
+  </div>
+
+  <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(220px,1fr));margin-bottom:24px;">
+    <div class="card" style="padding:16px;">
+      <label class="field">Sex (for the formula)
+        <select id="pfSex">
+          <option value="female" ${p.sex==='female'?'selected':''}>Female</option>
+          <option value="male" ${p.sex==='male'?'selected':''}>Male</option>
+        </select>
+      </label>
+    </div>
+    <div class="card" style="padding:16px;"><label class="field">Age<input type="number" id="pfAge" value="${p.age}" min="15" max="100"></label></div>
+    <div class="card" style="padding:16px;"><label class="field">Height (cm)<input type="number" id="pfHeight" value="${p.height}" min="120" max="230"></label></div>
+    <div class="card" style="padding:16px;"><label class="field">Current weight (kg)<input type="number" id="pfWeight" value="${p.weight}" min="35" max="250" step="0.1"></label></div>
+    <div class="card" style="padding:16px;"><label class="field">Goal weight (kg)<input type="number" id="pfGoalWeight" value="${p.goalWeight}" min="35" max="250" step="0.1"></label></div>
+    <div class="card" style="padding:16px;"><label class="field">Activity level<select id="pfActivity">${activityOptions}</select></label></div>
+    <div class="card" style="padding:16px;"><label class="field">Target pace<select id="pfPace">${paceOptions}</select></label></div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat"><div class="num">${Math.round(bmi*10)/10}</div><div class="lab">BMI · ${bmiCategory(bmi)}</div></div>
+    <div class="stat"><div class="num">${tdeeVal.toLocaleString('en-US')}</div><div class="lab">kcal/day to maintain weight</div></div>
+    <div class="stat"><div class="num">${target.toLocaleString('en-US')}</div><div class="lab">suggested daily target</div></div>
+    <div class="stat"><div class="num">${weeks || "–"}</div><div class="lab">${weeks? "weeks to goal weight at this pace" : "set a goal weight below current"}</div></div>
+  </div>
+
+  ${clamped ? `<div class="card" style="padding:14px 18px;margin-bottom:22px;background:var(--bad-bg);border-color:var(--bad);">
+    <b style="color:var(--bad);">Adjusted to a safe minimum</b>
+    <div style="font-size:0.83rem;color:var(--ink-soft);margin-top:2px;">The pace you picked would go under ${MIN_SAFE_KCAL} kcal/day, so the target above has been capped there. Very low intakes aren't recommended without medical supervision — consider a slower pace instead.</div>
+  </div>` : ""}
+  ${goalBmi!==null && goalBmi<18.5 ? `<div class="card" style="padding:14px 18px;margin-bottom:22px;background:var(--bad-bg);border-color:var(--bad);">
+    <b style="color:var(--bad);">Worth double-checking</b>
+    <div style="font-size:0.83rem;color:var(--ink-soft);margin-top:2px;">Your goal weight would put your BMI below the typical healthy range. Consider talking to a doctor or dietitian about what's right for your body before pursuing this target.</div>
+  </div>` : ""}
+
+  <div style="margin-bottom:26px;">
+    <button class="btn accent" data-act="use-target-as-goal">Use ${target} kcal/day as my Calories goal</button>
+  </div>
+
+  <div class="section-title" style="margin-top:0;">Weigh-in log</div>
+  <div class="card" style="padding:16px 18px;margin-bottom:22px;">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+      <input type="text" id="weighDate" placeholder="YYYY-MM-DD" value="${todayKey()}" style="max-width:150px;">
+      <input type="number" id="weighKg" placeholder="kg" step="0.1" style="max-width:100px;">
+      <button class="btn primary" data-act="add-weight">Log weight</button>
+    </div>
+    ${chart}
+    <div class="loglist" style="margin-top:${chart?'12px':'0'};">${logRows}</div>
+  </div>
+  `;
+}
+
+/* ============================= CALORIES TAB ============================= */
+
+function renderCalories(){
+  const key = todayKey();
+  const entries = state.log[key] || [];
+  const eaten = entries.reduce((s,e)=>s+e.kcal,0);
+  const goal = state.goal;
+  const pct = Math.min(100, Math.round((eaten/goal)*100)||0);
+  const remaining = goal - eaten;
+  const circumference = 2*Math.PI*60;
+  const dash = circumference*(pct/100);
+
+  const logRows = entries.map((e,i)=>`<div class="logitem"><span>${e.name}</span><span style="display:flex;gap:10px;align-items:center;"><b>${e.kcal} kcal</b><button data-rmlog="${i}">✕</button></span></div>`).join("")
+    || `<p style="color:var(--ink-soft);font-size:0.85rem;">Nothing logged yet today.</p>`;
+
+  const quickchips = RECIPES.map(r=>`<button class="chip" data-quickadd="${r.id}">+ ${r.name} (${r.kcal})</button>`).join("");
+
+  const days = [];
+  for(let i=6;i>=0;i--){
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const k = d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+    const total = (state.log[k]||[]).reduce((s,e)=>s+e.kcal,0);
+    days.push({label: d.toLocaleDateString('en-GB',{weekday:'short'}).slice(0,2), total});
+  }
+  const maxDay = Math.max(goal, ...days.map(d=>d.total), 1);
+  const bars = days.map(d=>{
+    const h = Math.round((d.total/maxDay)*100);
+    return `<div class="bar-col"><div class="bar" style="height:80px;"><i style="height:${h}%; background:${d.total>goal?'var(--bad)':'var(--primary)'}"></i></div><small>${d.label}</small></div>`;
+  }).join("");
+
+  return `
+  <div class="tabhead">
+    <h1>Calories</h1>
+    <p>Log what you eat today. Use the quick-add chips for your planned recipes, or add anything else by hand.</p>
+  </div>
+  <div class="card" style="padding:22px;margin-bottom:22px;">
+    <div class="cal-ring-wrap">
+      <div class="ring">
+        <svg viewBox="0 0 140 140">
+          <circle cx="70" cy="70" r="60" stroke="var(--surface-2)" stroke-width="12" fill="none"/>
+          <circle cx="70" cy="70" r="60" stroke="${eaten>goal?'var(--bad)':'var(--primary)'}" stroke-width="12" fill="none"
+            stroke-dasharray="${dash} ${circumference}" stroke-linecap="round"/>
+        </svg>
+        <div class="center"><b>${eaten}</b><span>of ${goal} kcal</span></div>
+      </div>
+      <div style="flex:1;min-width:200px;">
+        <div style="font-size:0.9rem;margin-bottom:6px;">${remaining>=0 ? `<b>${remaining}</b> kcal left today` : `<b style="color:var(--bad);">${-remaining} kcal over goal</b>`}</div>
+        <label class="field" style="max-width:160px;">Daily goal (kcal)
+          <input type="number" id="goalInput" value="${goal}" step="50">
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Quick add</div>
+  <div class="quickadd" style="margin-bottom:8px;">${quickchips}</div>
+  <div style="display:flex;gap:8px;margin:12px 0 22px;flex-wrap:wrap;">
+    <input type="text" id="customName" placeholder="Custom item (e.g. cheese sandwich)" style="max-width:260px;">
+    <input type="number" id="customKcal" placeholder="kcal" style="max-width:90px;">
+    <button class="btn primary" data-act="add-custom">Add</button>
+  </div>
+
+  <div class="card" style="padding:16px 18px;margin-bottom:22px;">
+    <div class="section-title" style="margin-top:0;">Logged today</div>
+    <div class="loglist">${logRows}</div>
+  </div>
+
+  <div class="card" style="padding:16px 18px;">
+    <div class="section-title" style="margin-top:0;">Last 7 days</div>
+    <div class="bar-row">${bars}</div>
+  </div>
+  `;
+}
+
+/* ============================= SETTINGS TAB ============================= */
+
+function renderSettings(){
+  const reg = currentRegion();
+  const rows = INGREDIENTS.map(ing=>{
+    const cells = SLOTS.map(s=>{
+      const regOv = state.priceOverrides[state.region];
+      const override = regOv && regOv[ing.id] && regOv[ing.id][s];
+      const base = basePriceFor(ing.id, s);
+      const val = override!==undefined && override!==null && override!=="" ? override : (base===null?"":base);
+      return `<input type="number" step="0.01" data-price="${ing.id}" data-store="${s}" value="${val}" placeholder="n/a">`;
+    }).join("");
+    return `<div class="settings-grid" style="padding:4px 0;border-bottom:1px solid var(--line);">
+      <div>${ing.name} <span style="color:var(--ink-soft);font-size:0.72rem;">/ ${ing.packageSize}${ing.unit}</span></div>
+      ${cells}
+    </div>`;
+  }).join("");
+
+  return `
+  <div class="tabhead">
+    <h1>Settings</h1>
+    <p>Prices are rough regional estimates, scaled from an Eindhoven baseline using approximate cost-of-living differences — not live per-country data. Enter your own observed prices below for a more accurate shopping list and budget plan.</p>
+  </div>
+
+  <div class="section-title" style="margin-top:0;">Region</div>
+  <div class="card" style="padding:16px;margin-bottom:26px;">
+    <div class="toolbar" style="margin-bottom:0;">${regionSelectors('settings')}</div>
+  </div>
+
+  <div class="section-title">Calorie goal</div>
+  <div class="card" style="padding:16px;max-width:280px;margin-bottom:26px;">
+    <label class="field">Daily goal (kcal)
+      <input type="number" id="goalInput2" value="${state.goal}" step="50">
+    </label>
+  </div>
+
+  <div class="section-title">Prices per item and store (${reg.symbol}) — ${reg.city}, ${reg.country}</div>
+  <div class="card" style="padding:14px 18px;">
+    <div class="settings-grid h" style="padding:0 0 6px;">
+      <div class="h">Item</div>${SLOTS.map(s=>`<div class="h">${storeLabel(s)}</div>`).join("")}
+    </div>
+    ${rows}
+  </div>
+
+  <div style="margin-top:24px;">
+    <button class="btn ghost" data-act="reset-prices">Reset prices for this region</button>
+    <button class="btn ghost" data-act="reset-all">Clear all data</button>
+  </div>
+  `;
+}
+
+/* ============================= HANDLERS ============================= */
+
+function attachHandlers(){
+  const main = document.getElementById("main");
+
+  main.querySelectorAll("[data-act='goto-shopping']").forEach(b=> b.addEventListener("click", ()=>{ currentTab="shopping"; render(); }));
+  main.querySelectorAll("[data-act='goto-planner']").forEach(b=> b.addEventListener("click", ()=>{ currentTab="planner"; render(); }));
+  main.querySelectorAll("[data-act='goto-settings']").forEach(b=> b.addEventListener("click", ()=>{ currentTab="settings"; render(); }));
+
+  // Cooking-method filter segments (any of the three tabs that render one)
+  main.querySelectorAll("[data-cookfilter]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      state.cookFilter = btn.dataset.cookfilter;
+      saveState(); render();
+    });
+  });
+
+  // Region selectors (appears on Budget tab and Settings tab)
+  ["settings","budget"].forEach(prefix=>{
+    const countrySel = document.getElementById(prefix+"Country");
+    const citySel = document.getElementById(prefix+"City");
+    if(countrySel){
+      countrySel.addEventListener("change", ()=>{
+        const firstCity = REGIONS.find(r=>r.country===countrySel.value);
+        if(firstCity){ state.region = firstCity.id; saveState(); render(); }
+      });
+    }
+    if(citySel){
+      citySel.addEventListener("change", ()=>{
+        state.region = citySel.value; saveState(); render();
+      });
+    }
+  });
+
+  // Planner
+  const plannerHH = document.getElementById("plannerHousehold");
+  if(plannerHH){
+    plannerHH.addEventListener("input", ()=>{
+      const v = parseInt(plannerHH.value,10);
+      if(!isNaN(v) && v>0){ state.household = v; saveState(); scheduleRender(); }
+    });
+  }
+  main.querySelectorAll("[data-servings]").forEach(inp=>{
+    inp.addEventListener("input", ()=>{
+      const id = inp.dataset.servings;
+      const raw = inp.value;
+      const v = raw==="" ? 0 : Math.max(0, parseInt(raw,10) || 0);
+      state.servingsWanted[id] = v;
+      saveState();
+      scheduleRender();
+    });
+  });
+  main.querySelectorAll("[data-fillhh]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.dataset.fillhh;
+      state.servingsWanted[id] = (state.servingsWanted[id]||0) + (state.household||1);
+      saveState(); render();
+    });
+  });
+
+  // Budget
+  main.querySelectorAll("[data-preset]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const [hh, bud] = btn.dataset.preset.split("-").map(Number);
+      state.household = hh; state.lastBudget = bud;
+      const fresh = suggestPlanForBudget(bud, hh);
+      state.servingsWanted = fresh.servings;
+      saveState(); render();
+    });
+  });
+  const runBudgetBtn = main.querySelector("[data-act='run-budget']");
+  if(runBudgetBtn){
+    runBudgetBtn.addEventListener("click", ()=>{
+      const v = parseFloat(document.getElementById("budgetInput").value);
+      const hhv = parseInt(document.getElementById("budgetHousehold").value,10);
+      if(!isNaN(v) && v>=0){ state.lastBudget = v; }
+      if(!isNaN(hhv) && hhv>0){ state.household = hhv; }
+      // Explicit regenerate: replace the current plan with a fresh suggestion for these numbers.
+      const fresh = suggestPlanForBudget(state.lastBudget, state.household);
+      state.servingsWanted = fresh.servings;
+      saveState(); render();
+    });
+  }
+
+  // Recipes / pantry
+  main.querySelectorAll("[data-pantry]").forEach(cb=>{
+    cb.addEventListener("change", ()=>{
+      state.pantry[cb.dataset.pantry] = cb.checked;
+      saveState();
+    });
+  });
+
+  // Shopping list checkoff
+  main.querySelectorAll("[data-bought]").forEach(cb=>{
+    cb.addEventListener("change", ()=>{
+      state.bought[cb.dataset.bought] = cb.checked;
+      saveState();
+    });
+  });
+
+  // Calories goal (appears on Calories tab and Settings tab)
+  const goalInput = document.getElementById("goalInput") || document.getElementById("goalInput2");
+  if(goalInput){
+    goalInput.addEventListener("input", ()=>{
+      const v = parseInt(goalInput.value,10);
+      if(!isNaN(v) && v>0){ state.goal = v; saveState(); scheduleRender(); }
+    });
+  }
+  main.querySelectorAll("[data-quickadd]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const r = REC[btn.dataset.quickadd];
+      const key = todayKey();
+      state.log[key] = state.log[key] || [];
+      state.log[key].push({name:r.name, kcal:r.kcal});
+      saveState(); render();
+    });
+  });
+  const addCustomBtn = main.querySelector("[data-act='add-custom']");
+  if(addCustomBtn){
+    addCustomBtn.addEventListener("click", ()=>{
+      const nameEl = document.getElementById("customName");
+      const kcalEl = document.getElementById("customKcal");
+      const name = nameEl.value.trim();
+      const kcal = parseInt(kcalEl.value,10);
+      if(!name || isNaN(kcal)) return;
+      const key = todayKey();
+      state.log[key] = state.log[key] || [];
+      state.log[key].push({name, kcal});
+      saveState(); render();
+    });
+  }
+  main.querySelectorAll("[data-rmlog]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const key = todayKey();
+      const idx = parseInt(btn.dataset.rmlog,10);
+      state.log[key].splice(idx,1);
+      saveState(); render();
+    });
+  });
+
+  // Weight goal
+  const profileFieldMap = {pfSex:"sex", pfAge:"age", pfHeight:"height", pfWeight:"weight", pfGoalWeight:"goalWeight", pfActivity:"activity", pfPace:"pace"};
+  Object.keys(profileFieldMap).forEach(elId=>{
+    const el = document.getElementById(elId);
+    if(!el) return;
+    el.addEventListener("change", ()=>{
+      const key = profileFieldMap[elId];
+      let v = el.value;
+      if(["age","height","weight","goalWeight","pace"].includes(key)) v = parseFloat(v);
+      state.profile[key] = v;
+      saveState(); render();
+    });
+  });
+  const useTargetBtn = main.querySelector("[data-act='use-target-as-goal']");
+  if(useTargetBtn){
+    useTargetBtn.addEventListener("click", ()=>{
+      const {target} = calorieTargetFor(state.profile);
+      state.goal = target;
+      saveState();
+      currentTab = "calories";
+      render();
+    });
+  }
+  const addWeightBtn = main.querySelector("[data-act='add-weight']");
+  if(addWeightBtn){
+    addWeightBtn.addEventListener("click", ()=>{
+      const dateEl = document.getElementById("weighDate");
+      const kgEl = document.getElementById("weighKg");
+      const date = dateEl.value.trim();
+      const kg = parseFloat(kgEl.value);
+      if(!date || isNaN(kg)) return;
+      state.weightLog = state.weightLog.filter(e=>e.date!==date);
+      state.weightLog.push({date, weight:kg});
+      state.profile.weight = kg;
+      saveState(); render();
+    });
+  }
+  main.querySelectorAll("[data-rmweight]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const idx = parseInt(btn.dataset.rmweight,10);
+      state.weightLog.splice(idx,1);
+      saveState(); render();
+    });
+  });
+
+  // Settings: prices
+  main.querySelectorAll("[data-price]").forEach(inp=>{
+    inp.addEventListener("change", ()=>{
+      const id = inp.dataset.price, store = inp.dataset.store;
+      const regionId = state.region;
+      state.priceOverrides[regionId] = state.priceOverrides[regionId] || {};
+      state.priceOverrides[regionId][id] = state.priceOverrides[regionId][id] || {};
+      state.priceOverrides[regionId][id][store] = inp.value===""? null : parseFloat(inp.value);
+      saveState();
+    });
+  });
+  const resetPrices = main.querySelector("[data-act='reset-prices']");
+  if(resetPrices) resetPrices.addEventListener("click", ()=>{
+    if(confirm("Reset prices for the current region back to their default estimates?")){
+      state.priceOverrides[state.region] = {}; saveState(); render();
+    }
+  });
+  const resetAll = main.querySelector("[data-act='reset-all']");
+  if(resetAll) resetAll.addEventListener("click", ()=>{
+    if(confirm("Are you sure you want to clear all data? This can't be undone.")){
+      state = { servingsWanted:{}, priceOverrides:{}, pantry:{}, goal:2200, log:{}, bought:{}, lastBudget:40, household:2, region:"nl-eindhoven", cookFilter:"any",
+        profile:{ sex:"female", age:30, height:170, weight:75, activity:"light", goalWeight:68, pace:0.5 }, weightLog:[] };
+      saveState(); render();
+    }
+  });
+}
+
+render();
+</script>
+</body>
+</html>
